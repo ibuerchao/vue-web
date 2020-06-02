@@ -63,12 +63,7 @@ function loadMenus(next, to){
 
 function filterRouter(menus) {
   return menus.filter(menu => {
-    if (menu.component==='menu') {
-      delete menu.component;
-    }else{
-      const component = menu.component
-      menu.component = loadView(component)
-    }
+    menu.component = loadView(menu.component)
     if (menu.children && menu.children.length) {
       menu.children = filterRouter(menu.children)
     }
