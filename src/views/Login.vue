@@ -2,7 +2,7 @@
     <div class="box">
         <div class="box-loading">
             <div class="box-loading-titles">
-                不二超elm
+                vue-web后台系统
             </div>
             <div class="box-loading-from">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
