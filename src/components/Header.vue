@@ -11,8 +11,8 @@
                background-color="#545c64"
                text-color="#fff"
                active-text-color="#ffd04b"
-               style="display: flex;flex-direction: row">
-               <el-menu-item v-for="menu in menus" :key="menu.path" :index="menu.path">{{menu.name}}</el-menu-item>
+               router>
+               <el-menu-item v-for="menu in menus" :key="menu.path" :index="menu.path" :route="menu.path">{{menu.name}}</el-menu-item>
        </el-menu>
 
        <el-dropdown>
@@ -45,9 +45,6 @@
         let subMenu = this.$store.getters.menus.filter(menu => menu.path ===key);
         this.$store.commit('SET_SUBMENU',subMenu[0])
       }
-    },
-    created() {
-      console.log('=>',this.$store.getters.activeIndex)
     }
   }
 </script>
