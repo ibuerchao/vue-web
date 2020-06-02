@@ -39,7 +39,6 @@ const data = [
   {
     name: '营销',
     path: '/marketing',
-    redirect:'/marketing/coupon',
     hidden: false,
     component:'system/System',
     children:[
@@ -60,7 +59,6 @@ const data = [
   {
     name: '订单',
     path: '/order',
-    redirect:'/order/normal',
     hidden: false,
     component:'system/System',
     children:[

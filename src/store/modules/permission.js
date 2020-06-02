@@ -1,5 +1,16 @@
 import constRoutes from '@/router/routes';
 
+function updateProperty(menus) {
+  menus.forEach(menu =>{
+    delete menu.component;
+    if (menu.children && menu.children.length){
+      menu.path=menu.children[0].path;
+      updateProperty(menu.children)
+    }
+  });
+  return menus;
+}
+
 const permission = {
   state: {
     routes: constRoutes,
@@ -14,10 +25,7 @@ const permission = {
 
     SET_MENUS: (state, menus) => {
       let temp = JSON.parse(JSON.stringify(menus));
-      temp.forEach(menu =>{
-        delete menu.component;
-      });
-      state.menus = temp;
+      state.menus = updateProperty(temp);
     },
 
     SET_MENU_FLAG:(state,menuFlag)=>{
