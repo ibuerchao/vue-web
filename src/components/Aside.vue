@@ -1,6 +1,7 @@
 <template>
-    <el-menu :default-openeds="['systemManage','userManage']"
+    <el-menu :default-openeds="['systemManage','userManage']"  active-text-color="#409eff"
              @select="handleSelect"
+             :default-active="subActiveIndex"
              router>
         <NavMenu :navMenus='subMenu.children'></NavMenu>
     </el-menu>
@@ -17,7 +18,8 @@
     },
     computed: {
       ...mapGetters([
-        'subMenu'
+        'subMenu',
+        'subActiveIndex'
       ])
     },
     data () {

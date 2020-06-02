@@ -7,6 +7,7 @@ const user = {
     token: getToken(),
     roles:[],
     activeIndex:'',
+    subActiveIndex:''
   },
 
   mutations: {
@@ -20,6 +21,10 @@ const user = {
 
     SET_ACTIVEINDEX:(state,activeIndex) =>{
       state.activeIndex = activeIndex;
+    },
+
+    SET_SUB_ACTIVEINDEX:(state,subActiveIndex) =>{
+      state.subActiveIndex = subActiveIndex;
     },
   },
 
@@ -50,6 +55,9 @@ const user = {
       return state.activeIndex;
     },
 
+    subActiveIndex(state){
+      return state.subActiveIndex;
+    },
   }
 };
 

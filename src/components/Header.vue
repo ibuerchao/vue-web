@@ -47,6 +47,7 @@
       handleSelect(key) {
         let subMenu = this.$store.getters.menus.filter(menu => menu.path ===key);
         this.$store.commit('SET_SUBMENU',subMenu[0])
+        this.$store.commit('SET_SUB_ACTIVEINDEX',subMenu[0].children[0].path)
       }
     }
   }
