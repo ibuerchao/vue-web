@@ -10,9 +10,7 @@
             <el-main>
                 <el-breadcrumb separator="/">
                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-                    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="breadcrumb in breadcrumbData">{{breadcrumb}}</el-breadcrumb-item>
                 </el-breadcrumb>
 
                 <el-tag style="margin: 5px"
@@ -47,6 +45,19 @@
       Header,
       Aside
     },
+    created() {
+      this.getBreadcrumb()
+    },
+    methods:{
+      getBreadcrumb(){
+        this.breadcrumbData = [this.$store.getters.subMenu.name,this.$route.name]
+      }
+    },
+    watch: {
+      $route() {
+        this.getBreadcrumb()
+      }
+    },
     data() {
       const item = {
         date: '2016-05-02',
@@ -54,6 +65,7 @@
         address: '上海市普陀区金沙江路 1518 弄'
       };
       return {
+        breadcrumbData:[],
         tableData: Array(200).fill(item),
         tags: [
           { name: '标签一', type: '' },
