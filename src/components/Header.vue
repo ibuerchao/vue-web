@@ -4,7 +4,7 @@
             vue-web后台系统
         </div>
        <el-menu
-               :default-active="menus[0].path"
+               :default-active="activeIndex"
                class="el-menu-demo header-menu"
                mode="horizontal"
                @select="handleSelect"
@@ -12,7 +12,7 @@
                text-color="#fff"
                active-text-color="#ffd04b"
                router>
-               <el-menu-item v-for="menu in menus" :key="menu.path" :index="menu.path" :route="menu.path">{{menu.name}}</el-menu-item>
+               <el-menu-item v-for="menu in menus" :key="menu.path" :index="menu.path" :route="menu.redirect">{{menu.name}}</el-menu-item>
        </el-menu>
 
        <div style="display: flex;justify-content: center; align-items: center;">
@@ -35,7 +35,8 @@
     name: "Header",
     computed: {
       ...mapGetters([
-        'menus'
+        'menus',
+        'activeIndex'
       ])
     },
     data(){

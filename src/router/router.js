@@ -14,6 +14,9 @@ let routers =new Router({
 
 const whiteList = ['/login'];
 
+/**
+ * 前置守卫
+ */
 routers.beforeEach((to,from,next) =>{
   console.log('token',getToken(),from.path,'=>',to.path)
   if (getToken()){
@@ -40,9 +43,13 @@ routers.beforeEach((to,from,next) =>{
   }
 });
 
+/**
+ * 动态加载路由
+ */
 function loadMenus(next, to){
   let menus = getMenus();
-  store.commit('SET_MENUS',menus)
+  store.commit('SET_MENUS',menus);
+  loadSubMenu(to);
   let router = filterRouter(menus);
   store.dispatch('generateRoutes',router).then(() =>{
     routers.addRoutes([
@@ -61,6 +68,28 @@ function loadMenus(next, to){
   })
 }
 
+/**
+ * 加载左侧子菜单
+ */
+function loadSubMenu(to) {
+  let path = to.path;
+  //默认跳转根路由，激活头部第一个主菜单
+  let subMenu = store.getters.menus[0];
+  if(path !=='/'){
+    //不是根路由，则截取url第一节后匹配出对应的子菜单
+    let index = path.substr(1).indexOf('/');
+    if (index!==-1){
+      path = path.substr(0,index+1);
+    }
+    subMenu = store.getters.menus.filter(menu => menu.path === path);
+  }
+  store.commit('SET_SUBMENU',subMenu[0])
+  store.commit('SET_ACTIVEINDEX',subMenu[0].path)
+}
+
+/**
+ * 将字符串类型的component实例化
+ */
 function filterRouter(menus) {
   return menus.filter(menu => {
     menu.component = loadView(menu.component)
@@ -71,6 +100,9 @@ function filterRouter(menus) {
   })
 }
 
+/**
+ * 加载组件
+ */
 function loadView(path) {
   return () => import('@/views/' + path + '.vue');
 }

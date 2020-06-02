@@ -4,7 +4,7 @@ function updateProperty(menus) {
   menus.forEach(menu =>{
     delete menu.component;
     if (menu.children && menu.children.length){
-      menu.path=menu.children[0].path;
+      menu.redirect=menu.children[0].path;
       updateProperty(menu.children)
     }
   });
