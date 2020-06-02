@@ -1,0 +1,65 @@
+<template>
+   <div class="header">
+        <div style="width: 20%;font-size: 20px;text-align: center;padding-top: 15px;">
+            不二超elm后台系统
+        </div>
+       <el-menu
+               :default-active="menus[0].path"
+               class="el-menu-demo header-menu"
+               mode="horizontal"
+               @select="handleSelect"
+               background-color="#545c64"
+               text-color="#fff"
+               active-text-color="#ffd04b"
+               style="display: flex;flex-direction: row">
+               <el-menu-item v-for="menu in menus" :key="menu.path" :index="menu.path">{{menu.name}}</el-menu-item>
+       </el-menu>
+
+       <el-dropdown>
+           <i class="el-icon-setting" style="margin-right: 15px;color: white"></i>
+           <el-dropdown-menu slot="dropdown">
+               <el-dropdown-item>查看</el-dropdown-item>
+               <el-dropdown-item>新增</el-dropdown-item>
+               <el-dropdown-item>删除</el-dropdown-item>
+           </el-dropdown-menu>
+       </el-dropdown>
+       <span>王小虎</span>
+   </div>
+</template>
+
+<script>
+  import { mapGetters } from 'vuex'
+  export default {
+    name: "Header",
+    computed: {
+      ...mapGetters([
+        'menus'
+      ])
+    },
+    data(){
+      return {
+      }
+    },
+    methods: {
+      handleSelect(key) {
+        let subMenu = this.$store.getters.menus.filter(menu => menu.path ===key);
+        this.$store.commit('SET_SUBMENU',subMenu[0])
+      }
+    },
+    created() {
+      console.log('=>',this.$store.getters.activeIndex)
+    }
+  }
+</script>
+
+<style lang="less">
+    .header{
+        display: flex;
+        flex-direction: row;
+        background-color:#545c64;
+        color: white;
+    }
+    .header-menu{
+        width: 75%;
+    }
+</style>
