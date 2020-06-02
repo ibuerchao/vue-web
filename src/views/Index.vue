@@ -8,23 +8,16 @@
                 <Aside/>
             </el-aside>
             <el-main>
-                <el-breadcrumb separator="/">
+                <el-breadcrumb style="padding-bottom: 10px;" separator="/">
                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item v-for="breadcrumb in breadcrumbData">{{breadcrumb}}</el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="breadcrumb in breadcrumbData" :key="breadcrumb">{{breadcrumb}}</el-breadcrumb-item>
                 </el-breadcrumb>
-
-                <el-tag style="margin: 5px"
-                        v-for="tag in tags"
-                        :key="tag.name"
-                        closable
-                        :type="tag.type">
-                    {{tag.name}}
-                </el-tag>
-                    <div style="border-top: solid 1px red">
-                        <transition mode="out-in">
-                            <router-view/>
-                        </transition>
-                    </div>
+                <TagsView/>
+                <div style="border-top: solid 1px red">
+                    <transition mode="out-in">
+                        <router-view/>
+                    </transition>
+                </div>
             </el-main>
         </el-container>
     </el-container>
@@ -39,11 +32,13 @@
 <script>
   import Header from '../components/Header.vue';
   import Aside from '../components/Aside.vue';
+  import TagsView from '../components/TagsView/TagsView.vue';
 
   export default {
     components: {
       Header,
-      Aside
+      Aside,
+      TagsView
     },
     created() {
       this.getBreadcrumb()

@@ -55,7 +55,7 @@ function loadMenus(next, to){
     routers.addRoutes([
       {
         path: '/',
-        name: 'home',
+        name: '首页',
         component: loadView('Index'),
         meta: {
           title: '首页'
