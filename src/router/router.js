@@ -85,8 +85,10 @@ function loadSubMenu(to) {
       path = path.substr(0,index+1);
     }
     subMenu = store.getters.menus.filter(menu => menu.path === path);
-    store.commit('SET_SUBMENU',subMenu[0]);
-    store.commit('SET_ACTIVEINDEX',subMenu[0].path)
+    if (subMenu.length>0){
+      store.commit('SET_SUBMENU',subMenu[0]);
+      store.commit('SET_ACTIVEINDEX',subMenu[0].path)
+    }
   }
 }
 
@@ -97,6 +99,7 @@ function filterRouter(menus) {
   return menus.filter(menu => {
     menu.component = loadView(menu.component)
     if (menu.children && menu.children.length) {
+      menu.redirect=menu.children[0].path;
       menu.children = filterRouter(menu.children)
     }
     return true
