@@ -14,27 +14,16 @@
         left: 0
       }
     },
+    computed: {
+      scrollWrapper() {
+        return this.$refs.scrollContainer.$refs.wrap
+      }
+    },
     methods: {
       handleScroll(e) {
-        const eventDelta = e.wheelDelta || -e.deltaY * 3//wheelDelta:-120;deltaY:-120
-        const $container = this.$refs.scrollContainer//外面的container
-        const $containerWidth = $container.offsetWidth//外面的container的宽度
-        const $wrapper = this.$refs.scrollWrapper//里面
-        const $wrapperWidth = $wrapper.offsetWidth//里面的宽度
-
-        if (eventDelta > 0) {
-          this.left = Math.min(0, this.left + eventDelta)//min() 方法可返回指定的数字中带有最低值的数字。
-        } else {
-          if ($containerWidth - padding < $wrapperWidth) {
-            if (this.left < -($wrapperWidth - $containerWidth + padding)) {
-              this.left = this.left+10
-            } else {
-              this.left = Math.max(this.left + eventDelta, $containerWidth - $wrapperWidth - padding)
-            }
-          } else {
-            this.left = 0
-          }
-        }
+        const eventDelta = e.wheelDelta || -e.deltaY * 40
+        const $scrollWrapper = this.scrollWrapper
+        $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
       },
       moveToTarget($target) {
         const $container = this.$refs.scrollContainer
