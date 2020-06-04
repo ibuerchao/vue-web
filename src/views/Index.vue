@@ -33,6 +33,7 @@
   import Header from '../components/Header.vue';
   import Aside from '../components/Aside.vue';
   import TagsView from '../components/TagsView/TagsView.vue';
+  import {loadSubMenu} from "@/utils/menu";
 
   export default {
     components: {
@@ -45,6 +46,7 @@
     },
     methods:{
       getBreadcrumb(){
+        loadSubMenu(this.$route);
         this.breadcrumbData = [this.$store.getters.subMenu.name,this.$route.name]
       }
     },
