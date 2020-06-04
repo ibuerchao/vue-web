@@ -58,7 +58,8 @@ function loadMenus(next, to){
         name: '首页',
         component: loadView('Index'),
         meta: {
-          title: '首页'
+          title: '首页',
+          affix: true
         },
         children:router
       },

@@ -29,19 +29,9 @@ const tagsView = {
       }
     },
     DEL_OTHERS_VIEWS: (state, view) => {
-      for (const [i, v] of state.visitedViews.entries()) {
-        if (v.path === view.path) {
-          state.visitedViews = state.visitedViews.slice(i, i + 1)
-          break
-        }
-      }
-      for (const i of state.cachedViews) {
-        if (i === view.name) {
-          const index = state.cachedViews.indexOf(i)
-          state.cachedViews = state.cachedViews.slice(index, i + 1)
-          break
-        }
-      }
+      state.visitedViews = state.visitedViews.filter(v => {
+        return v.meta.affix || v.path === view.path
+      })
     },
     DEL_ALL_VIEWS: (state) => {
       state.visitedViews = []
