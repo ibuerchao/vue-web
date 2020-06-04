@@ -103,8 +103,8 @@
         this.visible = true
         this.selectedTag = tag
         const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-        this.left = e.clientX - offsetLeft + 15 // 15: margin right
-        this.top = e.clientY
+        this.left = e.clientX - offsetLeft + 15+150 // 15: margin right
+        this.top = e.clientY+10
       },
       closeMenu() {
         this.visible = false

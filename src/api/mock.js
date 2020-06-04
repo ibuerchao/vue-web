@@ -3,7 +3,7 @@ const data = [
     name: '系统',
     path: '/system',
     hidden: false,
-    component:'system/System',
+    component:'Main',
     meta:{'icon':'el-icon-message'},
     children: [
       {
@@ -33,6 +33,20 @@ const data = [
         component: 'system/Resource',
         hidden: false,
         meta:{'icon':'el-icon-message'},
+      },
+      {
+        name: '字典管理',
+        path: '/system/dict',
+        component: 'system/Dict',
+        hidden: false,
+        meta:{'icon':'el-icon-message'},
+      },
+      {
+        name: '任务调度',
+        path: '/system/timing',
+        component: 'system/Timing',
+        hidden: false,
+        meta:{'icon':'el-icon-message'},
       }
     ]
   },
@@ -40,7 +54,7 @@ const data = [
     name: '营销',
     path: '/marketing',
     hidden: false,
-    component:'system/System',
+    component:'Main',
     children:[
       {
         name: '优惠券',
@@ -49,9 +63,15 @@ const data = [
         hidden: false
       },
       {
-        name: '活动',
+        name: '活动管理',
         path: '/marketing/activity',
         component: 'marketing/Activity',
+        hidden: false
+      },
+      {
+        name: '促销管理',
+        path: '/marketing/promotion',
+        component: 'marketing/Promotion',
         hidden: false
       }
     ]
@@ -60,7 +80,7 @@ const data = [
     name: '订单',
     path: '/order',
     hidden: false,
-    component:'system/System',
+    component:'Main',
     children:[
       {
         name: '正向订单',
@@ -74,6 +94,37 @@ const data = [
         component: 'order/Refund',
         hidden: false
       }
+    ]
+  },
+  { name: '监控',
+    path: '/monitor',
+    hidden: false,
+    component:'Main',
+    children:[
+      {
+        name: '在线用户',
+        path: '/monitor/online',
+        component: 'monitor/Online',
+        hidden: false
+      },
+      {
+        name: '操作日志',
+        path: '/monitor/log',
+        component: 'monitor/OperLog',
+        hidden: false
+      },
+      {
+        name: '异常日志',
+        path: '/monitor/error',
+        component: 'monitor/ErrorLog',
+        hidden: false
+      },
+      {
+        name: '服务监控',
+        path: '/monitor/server',
+        component: 'monitor/Server',
+        hidden: false
+      },
     ]
   }
 ];

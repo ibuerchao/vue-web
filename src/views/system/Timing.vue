@@ -1,12 +1,10 @@
 <template>
-    <div>
-        <router-view/>
-    </div>
+    <div>任务调度</div>
 </template>
 
 <script>
   export default {
-    name: "System"
+    name: "Timing"
   }
 </script>
 
