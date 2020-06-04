@@ -51,20 +51,21 @@ function loadMenus(next, to){
   store.commit('SET_MENUS',menus);
   loadSubMenu(to);
   let router = filterRouter(menus);
-  store.dispatch('generateRoutes',router).then(() =>{
-    routers.addRoutes([
-      {
-        path: '/',
-        name: '首页',
-        component: loadView('Index'),
-        meta: {
-          title: '首页',
-          affix: true
-        },
-        children:router
+  router = [
+    {
+      path: '/',
+      name: '首页',
+      component: loadView('Index'),
+      meta: {
+        title: '首页',
+        affix: true
       },
-      { path: '*', redirect: '/404', hidden: true }
-    ]); // 动态添加可访问路由表
+      children:router
+    },
+    { path: '*', redirect: '/404', hidden: true }
+  ]
+  store.dispatch('generateRoutes',router).then(() =>{
+    routers.addRoutes(router); // 动态添加可访问路由表
     next({ ...to, replace: true })
   })
 }
