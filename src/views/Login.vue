@@ -15,11 +15,8 @@
 
                     <div class="box-loading-from-checks">
                         <el-checkbox v-model="ruleForm.checked">七天免密登陆</el-checkbox>
-
                         <el-link type="danger" class="forget ">忘记密码？</el-link>
-
                         <el-link type="info">
-
                         </el-link>
                     </div>
                     <el-form-item class="submits">
@@ -32,6 +29,8 @@
 </template>
 
 <script>
+  import {encrypt} from '@/utils/rsa'
+
   export default {
     data() {
       return {
@@ -59,9 +58,10 @@
           if (valid) {
             let data = {
               username: this.ruleForm.username,
-              password: this.ruleForm.password
+              password: this.ruleForm.password,
+              rememberMe: this.ruleForm.checked
             };
-
+            data.password =encrypt(this.ruleForm.password);
             this.$store.dispatch('login', data).then(() => {
               this.$router.push('/')
             });
