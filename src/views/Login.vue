@@ -65,9 +65,6 @@
             this.$store.dispatch('login', data).then(() => {
               this.$router.push('/')
             });
-            // let login = this.$api.login(this.ruleForm.username);
-            // this.$store.dispatch('updateMenuFlag',true).then(() => {});
-
           }
         });
       }
