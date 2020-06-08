@@ -90,7 +90,7 @@ function filterRouter(menus) {
  * 加载组件
  */
 function loadView(path) {
-  return () => import('@/views/' + path + '.vue');
+  return (resolve) => require([`@/views/${path}`], resolve)
 }
 
 export default routers;

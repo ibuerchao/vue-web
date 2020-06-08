@@ -1,5 +1,5 @@
 function loadView(file) {
-  return () => import('@/views/' + file + '.vue');
+  return (resolve) => require([`@/views/${file}`], resolve)
 }
 
 const routes = [
