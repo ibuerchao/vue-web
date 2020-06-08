@@ -1,5 +1,5 @@
 import { getToken, setToken } from '@/utils/auth'
-import {login} from '@/api/api'
+import {signIn} from '@/api/user'
 import store from "@/store/store";
 
 const user = {
@@ -35,14 +35,17 @@ const user = {
 
     // 登录
     login({ commit }, userInfo) {
-      return new Promise((resolve) => {
-        let data = login(userInfo.username);
-        store.dispatch('updateMenuFlag',true).then(() => {});
-        setToken(data.token, true)
-        commit('SET_TOKEN', data.token)
-        commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
-        commit('SET_MENU_FLAG', true)
-        resolve()
+      return new Promise((resolve,reject) => {
+        signIn(userInfo).then(res => {
+          store.dispatch('updateMenuFlag',true).then(() => {});
+          setToken(res.data, true)
+          commit('SET_TOKEN', res.data)
+          commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
+          commit('SET_MENU_FLAG', true)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
       })
     }
   },
