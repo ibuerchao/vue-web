@@ -13,7 +13,7 @@ let routers =new Router({
   routes
 });
 
-const whiteList = ['/login'];
+const whiteList = ['/login','/forget','/signUp'];
 
 /**
  * 前置守卫
