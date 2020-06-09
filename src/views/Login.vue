@@ -15,13 +15,14 @@
 
                     <div class="box-loading-from-checks">
                         <el-checkbox v-model="ruleForm.checked">七天免密登陆</el-checkbox>
-                        <el-link type="danger" class="forget ">忘记密码？</el-link>
-                        <el-link type="info">
-                        </el-link>
                     </div>
                     <el-form-item class="submits">
                         <el-button class="submits-btns" type="primary" @click="submitForm('ruleForm')">立即登陆</el-button>
                     </el-form-item>
+                    <div class="box-loading-from-checks">
+                        <el-link type="danger" href="/forget">忘记密码</el-link>
+                        <el-link type="primary" href="/signUp">没有账号，去注册</el-link>
+                    </div>
                 </el-form>
             </div>
         </div>
@@ -38,7 +39,6 @@
           username: 'buerchao',
           password: 'buerchao',
           checked: false,
-          path: '/'
         },
         rules: {
           username: [
@@ -111,10 +111,6 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 15px;
-    }
-
-    .forget {
-        color: #FD3C53;
     }
 
     .submits {
