@@ -14,7 +14,14 @@ const routes = [
   {
     path: '/404',
     component: loadView('404'),
-    hidden: true
+  },
+  {
+    path: '/forget',
+    component: loadView('help/Forget'),
+  },
+  {
+    path: '/signUp',
+    component: loadView('help/SignUp'),
   },
   // {
   //   path: '/',
