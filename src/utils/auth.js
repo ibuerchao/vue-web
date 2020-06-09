@@ -8,9 +8,11 @@ export function getToken() {
 }
 
 export function setToken(token, rememberMe) {
-  if (rememberMe) {
-    return Cookies.set(TokenKey, token, { expires: Config.tokenCookieExpires })
-  } else return Cookies.set(TokenKey, token)
+  let expires = Config.rememberMeNot;
+  if (rememberMe){
+    expires = Config.rememberMe;
+  }
+  Cookies.set(TokenKey, token, { expires: expires })
 }
 
 export function removeToken() {

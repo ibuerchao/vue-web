@@ -32,7 +32,7 @@ service.interceptors.response.use(
   response => {
     if (response.status!==200 || response.data.code!==200) {
       Notification.error({
-        title: response.msg
+        title: response.data.msg
       })
       return Promise.reject('error')
     } else {

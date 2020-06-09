@@ -38,7 +38,7 @@ const user = {
       return new Promise((resolve,reject) => {
         signIn(userInfo).then(res => {
           store.dispatch('updateMenuFlag',true).then(() => {});
-          setToken(res.data, true)
+          setToken(res.data, userInfo.rememberMe);
           commit('SET_TOKEN', res.data)
           commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
           commit('SET_MENU_FLAG', true)
