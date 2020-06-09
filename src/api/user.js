@@ -16,4 +16,10 @@ export function signOut(data) {
   })
 }
 
-export default { signIn,signOut }
+export function getCode(params) {
+  return request({
+    url: 'api/code',
+    method: 'get',
+    params
+  })
+}
