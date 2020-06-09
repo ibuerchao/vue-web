@@ -63,7 +63,7 @@
             };
             data.password =encrypt(this.ruleForm.password);
             this.$store.dispatch('login', data).then(() => {
-              this.$router.push({ path: this.redirect || '/' })
+              this.$router.push('/')
             }).catch(() => {
               console.log('error')
             });

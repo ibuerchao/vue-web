@@ -16,12 +16,10 @@
        </el-menu>
 
        <div style="display: flex;justify-content: center; align-items: center;">
-           <el-dropdown>
+           <el-dropdown @command="handleCommand">
                <i class="el-icon-setting" style="margin-right: 15px;color: white"></i>
                <el-dropdown-menu slot="dropdown">
-                   <el-dropdown-item>查看</el-dropdown-item>
-                   <el-dropdown-item>新增</el-dropdown-item>
-                   <el-dropdown-item>删除</el-dropdown-item>
+                   <el-dropdown-item command="logout">退出</el-dropdown-item>
                </el-dropdown-menu>
            </el-dropdown>
            <span>王小虎</span>
@@ -48,6 +46,21 @@
         let subMenu = this.$store.getters.menus.filter(menu => menu.path ===key);
         this.$store.commit('SET_SUBMENU',subMenu[0])
         this.$store.commit('SET_SUB_ACTIVEINDEX',subMenu[0].children[0].path)
+      },
+
+      handleCommand(command) {
+        eval("this."+command+"()")
+      },
+      logout(){
+        this.$confirm('确定注销并退出系统吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('logout').then(() => {
+            location.reload()
+          })
+        }).catch(()=>{})
       }
     }
   }

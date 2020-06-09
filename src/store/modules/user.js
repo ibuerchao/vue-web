@@ -1,5 +1,5 @@
-import { getToken, setToken } from '@/utils/auth'
-import {signIn} from '@/api/user'
+import { getToken, setToken,removeToken } from '@/utils/auth'
+import {signIn,signOut} from '@/api/user'
 import store from "@/store/store";
 
 const user = {
@@ -47,6 +47,18 @@ const user = {
           reject(error)
         })
       })
+    },
+    // 登出
+    logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        signOut().then(() => {
+          logOut(commit)
+          resolve()
+        }).catch(error => {
+          logOut(commit)
+          reject(error)
+        })
+      })
     }
   },
 
@@ -64,10 +76,10 @@ const user = {
   }
 };
 
-// export const logOut = (commit) => {
-//   commit('SET_TOKEN', '')
-//   commit('SET_ROLES', [])
-//   removeToken()
-// }
+export const logOut = (commit) => {
+  commit('SET_TOKEN', '')
+  commit('SET_ROLES', [])
+  removeToken()
+}
 
 export default user

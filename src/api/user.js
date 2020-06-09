@@ -10,7 +10,7 @@ export function signIn(data) {
 
 export function signOut(data) {
   return request({
-    url: 'sys/sign_out',
+    url: 'api/sys/sign_out',
     method: 'post',
     data
   })
