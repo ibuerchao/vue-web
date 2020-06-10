@@ -6,8 +6,8 @@
             </div>
             <div class="box-loading-from">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                    <el-form-item prop="username">
-                        <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
+                    <el-form-item prop="email">
+                        <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
                         <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
@@ -17,7 +17,7 @@
                         <el-checkbox v-model="ruleForm.checked">七天免密登陆</el-checkbox>
                     </div>
                     <el-form-item class="submits">
-                        <el-button class="submits-btns" type="primary" @click="submitForm('ruleForm')">立即登陆</el-button>
+                        <el-button class="submits-btns" type="primary" :loading="loading" @click="submitForm('ruleForm')">立即登陆</el-button>
                     </el-form-item>
                     <div class="box-loading-from-checks">
                         <el-link type="danger" href="/forget">忘记密码</el-link>
@@ -35,19 +35,20 @@
   export default {
     data() {
       return {
+        loading:false,
         ruleForm: {
-          username: 'buerchao',
-          password: 'buerchao',
+          email: '',
+          password: '',
           checked: false,
         },
         rules: {
-          username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'},
-            {min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur'}
+          email: [
+            {required: true, message: '请输入邮箱地址', trigger: 'blur'},
+            {type: 'email',  message: '请输入正确的邮箱地址', trigger: ['blur', 'change']}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
-            {min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur'}
+            {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'}
           ]
         }
       }
@@ -56,16 +57,18 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
             let data = {
-              username: this.ruleForm.username,
+              email: this.ruleForm.email,
               password: this.ruleForm.password,
               rememberMe: this.ruleForm.checked
             };
             data.password =encrypt(this.ruleForm.password);
             this.$store.dispatch('login', data).then(() => {
+              this.loading = false;
               this.$router.push('/')
             }).catch(() => {
-              console.log('error')
+              this.loading = false;
             });
           }
         });

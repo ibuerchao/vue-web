@@ -55,7 +55,7 @@
           ],
           password: [
             {required: true, message: '输入新密码', trigger: 'blur'},
-            {min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur'}
+            {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'}
           ],
           code: [
             {required: true, message: '输入验证码', trigger: 'blur'},
