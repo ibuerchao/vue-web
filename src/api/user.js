@@ -9,6 +9,15 @@ export function signIn(data) {
   })
 }
 
+//用户注册
+export function signUp(data) {
+  return request({
+    url: 'api/help/sign_up',
+    method: 'post',
+    data
+  })
+}
+
 //用户登出
 export function signOut(data) {
   return request({

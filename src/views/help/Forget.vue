@@ -21,7 +21,7 @@
                         <el-button class="submits-btns" type="primary" :loading="loading" @click="submitForm('ruleForm')">重置密码</el-button>
                     </el-form-item>
                     <div class="box-loading-from-checks">
-                        <el-link type="primary">注册</el-link>
+                        <el-link type="primary" href="/signUp">注册</el-link>
                         <el-link type="primary" href="/login">登录</el-link>
                     </div>
                 </el-form>

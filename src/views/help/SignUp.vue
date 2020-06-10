@@ -10,15 +10,13 @@
                         <el-input v-model="ruleForm.email" placeholder="请输入邮箱地址"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
-                        <el-input v-model="ruleForm.password" placeholder="输入新密码" :show-password="true"></el-input>
+                        <el-input v-model="ruleForm.password" placeholder="请输入密码" :show-password="true"></el-input>
                     </el-form-item>
-                    <el-form-item prop="code">
-                        <el-input v-model="ruleForm.code" placeholder="输入验证码">
-                            <el-button slot="append" style="color: #4386f5" @click="code('ruleForm.code')">获取验证码</el-button>
-                        </el-input>
+                    <el-form-item prop="username">
+                        <el-input v-model="ruleForm.username" placeholder="请输入昵称"></el-input>
                     </el-form-item>
                     <el-form-item class="submits">
-                        <el-button class="submits-btns" type="primary" @click="submitForm('ruleForm')">重置密码</el-button>
+                        <el-button class="submits-btns" type="primary" :loading="loading" @click="submitForm('ruleForm')">立即注册</el-button>
                     </el-form-item>
                     <div class="box-loading-from-checks">
                         <el-link type="primary" href="/login">已有账号，去登录</el-link>
@@ -31,28 +29,30 @@
 
 <script>
   import {encrypt} from '@/utils/rsa'
+  import {signUp} from "@/api/user";
 
   export default {
     data() {
       return {
+        loading:false,
         ruleForm: {
           email: '',
           password: '',
-          code: '',
+          username:''
         },
         rules: {
           email: [
             {required: true, message: '请输入邮箱地址', trigger: 'blur'},
-            {min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur'}
+            {type: 'email',  message: '请输入正确的邮箱地址', trigger: ['blur', 'change']}
           ],
           password: [
-            {required: true, message: '输入新密码', trigger: 'blur'},
-            {min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur'}
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {min: 6, max: 18, message: '密码长度在 6 到 18 个字符', trigger: 'blur'}
           ],
-          code: [
-            {required: true, message: '输入验证码', trigger: 'blur'},
-            {min: 6, max: 6, message: '长度为6个字符', trigger: 'blur'}
-          ]
+          username: [
+            {required: true, message: '请输入昵称', trigger: 'blur'},
+            {min: 3, max: 16, message: '昵称长度在 3 到 16 个字符', trigger: 'blur'}
+          ],
         }
       }
     },
@@ -60,24 +60,24 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
             let data = {
-              username: this.ruleForm.username,
-              password: this.ruleForm.password,
-              rememberMe: this.ruleForm.checked
+              email: this.ruleForm.email,
+              password: encrypt(this.ruleForm.password),
+              username:this.ruleForm.username
             };
-            data.password =encrypt(this.ruleForm.password);
-            this.$store.dispatch('login', data).then(() => {
-              this.$router.push('/')
+            signUp(data).then(() => {
+              this.loading =false;
+              this.ruleForm.email=''
+              this.ruleForm.password=''
+              this.ruleForm.username=''
+              this.$message({
+                message: '注册成功',
+                type: 'success'
+              });
             }).catch(() => {
-              console.log('error')
+              this.loading =false;
             });
-          }
-        });
-      },
-      code(code){
-        this.$refs.ruleForm.validateField('email', (error) => {
-          if(!error){
-            console.log(code)
           }
         });
       }

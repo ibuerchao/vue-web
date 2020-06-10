@@ -7,7 +7,7 @@
             <div class="box-loading-from">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                     <el-form-item prop="email">
-                        <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
+                        <el-input v-model="ruleForm.email" placeholder="请输入邮箱地址"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
                         <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
