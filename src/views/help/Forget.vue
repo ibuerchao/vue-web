@@ -18,7 +18,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item class="submits">
-                        <el-button class="submits-btns" type="primary" @click="submitForm('ruleForm')">重置密码</el-button>
+                        <el-button class="submits-btns" type="primary" :loading="loading" @click="submitForm('ruleForm')">重置密码</el-button>
                     </el-form-item>
                     <div class="box-loading-from-checks">
                         <el-link type="primary">注册</el-link>
@@ -32,11 +32,12 @@
 
 <script>
   import {encrypt} from '@/utils/rsa'
-  import {getCode} from "@/api/user";
+  import {getCode, resetPassword} from "@/api/user";
 
   export default {
     data() {
       return {
+        loading:false,
         buttonName:'获取验证码',
         disabled: false,
         style:'color: #4386f5;width:150px',
@@ -67,13 +68,24 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
             let data = {
               email: this.ruleForm.email,
-              password: this.ruleForm.password,
+              password: encrypt(this.ruleForm.password),
               code: this.ruleForm.code
             };
-            data.password =encrypt(this.ruleForm.password);
-            console.log(data)
+            resetPassword(data).then(res=>{
+              if (res.code ===200){
+                this.ruleForm.email='';
+                this.ruleForm.password='';
+                this.ruleForm.code='';
+                this.$message({
+                  message: '密码重置成功',
+                  type: 'success'
+                });
+              this.loading = false;
+              }
+            }).catch(()=>{this.loading = false;})
           }
         });
       },
@@ -81,15 +93,14 @@
         let that = this;
         this.$refs.ruleForm.validateField('email', (error) => {
           if(!error){
+            that.disabled = true;
+            that.style = 'background-color: transparent;color: #B0B0B0;width:150px';
             let params = {email:this.ruleForm.email};
             getCode(params).then(res=>{
               if (res.code===200){
-                that.disabled = true;
-                that.style = 'background-color: transparent;color: #B0B0B0;width:150px';
                 that.buttonName = --that.second + "秒后重新获取";
                 let interval = window.setInterval(function() {
-                  --that.second;
-                  that.buttonName = that.second + "秒后重新获取";
+                  that.buttonName = --that.second + "秒后重新获取";
                   if (that.second < 1) {
                     that.buttonName = "获取验证码";
                     that.second = 60;
@@ -99,7 +110,7 @@
                   }
                 }, 1000);
               }
-            }).catch()
+            }).catch(()=>{that.disabled = false;})
           }
         });
       }

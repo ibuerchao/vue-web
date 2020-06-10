@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Config from '@/settings'
 import { getToken } from '@/utils/auth'
-import { Notification, MessageBox } from 'element-ui'
+import { Notification, MessageBox,Message } from 'element-ui'
 import store from "@/store/store";
 import router from "@/router/router";
 
@@ -31,9 +31,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     if (response.status!==200 || response.data.code!==200) {
-      Notification.error({
-        title: response.data.msg
-      })
+      Message.error(response.data.msg)
+      // Notification.error({
+      //   title: response.data.msg
+      // })
       return Promise.reject('error')
     } else {
       return response.data
