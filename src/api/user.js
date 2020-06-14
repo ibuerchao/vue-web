@@ -21,7 +21,7 @@ export function signUp(data) {
 //用户登出
 export function signOut(data) {
   return request({
-    url: 'api/sys/sign_out',
+    url: 'api/user/sign_out',
     method: 'post',
     data
   })

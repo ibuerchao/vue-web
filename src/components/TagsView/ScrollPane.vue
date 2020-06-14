@@ -79,6 +79,7 @@
       }
       .el-scrollbar__wrap {
         height: 49px;
+        overflow:hidden;
       }
     }
   }

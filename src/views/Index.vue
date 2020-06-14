@@ -8,12 +8,12 @@
                 <Aside/>
             </el-aside>
             <el-main>
-                <el-breadcrumb style="padding-bottom: 10px;" separator="/">
+                <el-breadcrumb style="padding-bottom: 10px;height: 14px;" separator="/">
                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                     <el-breadcrumb-item v-for="breadcrumb in breadcrumbData" :key="breadcrumb">{{breadcrumb}}</el-breadcrumb-item>
                 </el-breadcrumb>
                 <TagsView/>
-                <div style="border-top: solid 1px red">
+                <div class="context">
                     <transition mode="out-in">
                         <router-view/>
                     </transition>
@@ -26,6 +26,15 @@
 <style>
     .el-main{
         background-color: #F5F7F9;
+        padding:10px 5px 0 5px;
+    }
+    .context{
+        width: calc(100% - 20px);
+        height:calc(100% - 88px);
+        background-color: #FFFFFF;
+        padding: 10px;
+        margin-top: 10px;
+        box-shadow: 0 0 10px #c0adaf;
     }
 </style>
 
