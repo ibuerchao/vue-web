@@ -8,3 +8,17 @@ export function list(data) {
     data
   })
 }
+
+export function detail(id) {
+  return request({
+    url: `api/dept/detail/${id}`,
+    method: 'get',
+  })
+}
+
+export function del(id) {
+  return request({
+    url: `api/dept/delete/${id}`,
+    method: 'delete',
+  })
+}

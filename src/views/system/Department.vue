@@ -100,9 +100,9 @@
                     align="center"
                     header-align="center">
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
-                    <el-button @click="handleClick(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
-                    <el-button @click="handleClick(scope.row)" type="danger" size="small" icon="el-icon-delete"></el-button>
+                    <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
+                    <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
+                    <el-button @click="delete(scope.row)" type="danger" size="small" icon="el-icon-delete"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -117,15 +117,18 @@
                     :total="total">
             </el-pagination>
         </div>
+        <Detail :visible="visible" :form="form" :disabled="disabled" @closeDialog="closeDialog"></Detail>
     </el-scrollbar>
 </template>
 
 <script>
 
-  import {list} from '@/api/dept';
+  import {list,detail,del} from '@/api/dept';
+  import Detail from "@/views/system/dept/detail";
 
   export default {
     name: "Department",
+    components: {Detail},
     data() {
       return {
         name: null,
@@ -136,6 +139,9 @@
         currentPage:1,
         pageSize:10,
         total:0,
+        visible:false,
+        form:{},
+        disabled:true
       }
     },
     methods: {
@@ -192,6 +198,32 @@
         this.pageSize=10;
         this.total=0;
         this.onSubmit();
+      },
+      detail(row){
+        detail(row.id).then(res=>{
+          if (res.code===200){
+            this.visible = true;
+            this.form = res.data;
+            this.disabled=true;
+          }
+        }).catch(()=>{})
+      },
+      edit(row){
+        detail(row.id).then(res=>{
+          if (res.code===200){
+            this.visible = true;
+            this.form = res.data;
+            this.disabled=false;
+          }
+        }).catch(()=>{})
+      },
+      delete(row){
+        del(row.id).then(res=>{
+          console.log(res)
+        }).catch(()=>{})
+      },
+      closeDialog(){
+        this.visible=false;
       }
     },
     created() {
