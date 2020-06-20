@@ -1,11 +1,12 @@
 <template>
-    <div>
+    <el-scrollbar>
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
                 <el-input v-model="name" placeholder="输入部门名称搜索" size="small" clearable></el-input>
             </el-form-item>
             <el-form-item>
                 <el-select v-model="status" placeholder="状态" size="small" style="width: 90px">
+                    <el-option label="全部" value=""></el-option>
                     <el-option label="正常" value="1"></el-option>
                     <el-option label="禁用" value="0"></el-option>
                 </el-select>
@@ -28,7 +29,7 @@
                 <el-button type="primary" @click="onSubmit" size="small" icon="el-icon-search">查询</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="onSubmit" size="small" icon="el-icon-refresh-right">重置</el-button>
+                <el-button type="warning" @click="reset()" size="small" icon="el-icon-refresh-right">重置</el-button>
             </el-form-item>
         </el-form>
 
@@ -110,13 +111,13 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
+                    :page-sizes="[10, 20, 50, 100]"
+                    :page-size="10"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
+                    :total="total">
             </el-pagination>
         </div>
-    </div>
+    </el-scrollbar>
 </template>
 
 <script>
@@ -132,11 +133,14 @@
         selectTime: null,
         operateName: null,
         tableData: [],
-        currentPage:1
+        currentPage:1,
+        pageSize:10,
+        total:0,
       }
     },
     methods: {
       onSubmit() {
+        this.tableData=[];
         let start = null, end = null;
         if (this.selectTime) {
           start = this.selectTime[0];
@@ -147,10 +151,13 @@
           status: this.status,
           start: start,
           end: end,
-          operateName: this.operateName
+          operateName: this.operateName,
+          offset:(this.currentPage -1)*this.pageSize,
+          limit:this.pageSize
         };
         list(data).then(res => {
-          this.tableData = res.data
+          this.tableData = res.data;
+          this.total = res.total;
         }).catch(() => {
         })
       },
@@ -167,11 +174,24 @@
           resolve(res.data)
         }).catch(()=>{})
       },
-      handleSizeChange(){
-
+      handleSizeChange(size){
+        this.pageSize = size;
+        this.onSubmit();
       },
-      handleCurrentChange(){
-
+      handleCurrentChange(page){
+        this.currentPage = page;
+        this.onSubmit();
+      },
+      reset(){
+        this.name= null;
+        this.status=  null;
+        this.selectTime=  null;
+        this.operateName=  null;
+        this.tableData= [];
+        this.currentPage= 1;
+        this.pageSize=10;
+        this.total=0;
+        this.onSubmit();
       }
     },
     created() {
