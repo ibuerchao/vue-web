@@ -117,13 +117,13 @@
                     :total="total">
             </el-pagination>
         </div>
-        <Detail :visible="visible" :form="form" :disabled="disabled" @closeDialog="closeDialog"></Detail>
+        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" @closeDialog="closeDialog" @submitEdit="submitEdit(form)"></Detail>
     </el-scrollbar>
 </template>
 
 <script>
 
-  import {list,detail,del} from '@/api/dept';
+  import {list,detail,del,superior,edit} from '@/api/dept';
   import Detail from "@/views/system/dept/detail";
 
   export default {
@@ -141,7 +141,9 @@
         total:0,
         visible:false,
         form:{},
-        disabled:true
+        disabled:true,
+        title:'',
+        depts:[]
       }
     },
     methods: {
@@ -205,15 +207,21 @@
             this.visible = true;
             this.form = res.data;
             this.disabled=true;
+            this.title='部门详情';
           }
         }).catch(()=>{})
       },
       edit(row){
         detail(row.id).then(res=>{
           if (res.code===200){
+            this.superior();
             this.visible = true;
             this.form = res.data;
+            if (res.data.parentId==='root'){
+              this.form.parentId=null
+            }
             this.disabled=false;
+            this.title='编辑部门';
           }
         }).catch(()=>{})
       },
@@ -224,9 +232,32 @@
       },
       closeDialog(){
         this.visible=false;
+      },
+      superior(){
+        let params = {id:'root',status:null}
+        superior(params).then(res=>{
+          this.depts=res.data;
+        }).catch(()=>{})
+      },
+      submitEdit(form){
+        let data = {id:form.id,name:form.name,parentId:form.parentId,status:form.status,remark:form.remark};
+        edit(data).then(()=>{
+          this.$message({
+            message: '编辑成功',
+            type: 'success'
+          });
+          this.onSubmit();
+        }).catch(()=>{
+          this.$message({
+            message: '编辑失败',
+            type: 'error'
+          });
+        })
+        this.visible=false;
       }
     },
     created() {
+      this.tableData=[];
       this.onSubmit();
     }
   }

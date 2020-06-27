@@ -1,38 +1,48 @@
 <template>
-    <el-dialog title="部门详情" :visible.sync="visible" :before-close="handleClose" :disabled="true" :show-close="false"
-               class="dialog">
+    <el-dialog :title="title" :visible.sync="visible" :before-close="handleClose" :disabled="true" :show-close="false" width="30%">
         <el-form :model="form">
             <el-form-item label="部门名称" :label-width="labelWidth" maxlength="20">
                 <el-input v-model="form.name" :disabled="disabled" size="small" ></el-input>
             </el-form-item>
             <el-form-item label="部门状态" :label-width="labelWidth">
-                <el-input :value="form.status=== 1 ? '正常':'禁用'" :disabled="disabled" size="small"></el-input>
+                <el-input v-if="disabled" :value="form.status=== 1 ? '正常':'禁用'" :disabled="disabled" size="small"></el-input>
+                <el-select v-else v-model="form.status" placeholder="状态" size="small">
+                    <el-option label="正常" :value="1"></el-option>
+                    <el-option label="禁用" :value="0"></el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="层级序号" :label-width="labelWidth">
+            <el-form-item label="上级部门" :label-width="labelWidth" v-if="!disabled">
+                <treeselect v-model="form.parentId" :options="depts" placeholder="选择上级类目" />
+            </el-form-item>
+            <el-form-item label="层级序号" :label-width="labelWidth" v-if="disabled">
                 <el-input v-model="form.seq" :disabled="disabled" size="small"></el-input>
             </el-form-item>
             <el-form-item label="备注" :label-width="labelWidth">
-                <el-input v-model="form.remark" type="textarea" rows="3" :disabled="disabled" size="small"></el-input>
+                <el-input v-model="form.remark" type="textarea" rows="3" :disabled="disabled" size="small" resize="none"></el-input>
             </el-form-item>
-            <el-form-item label="操作人" :label-width="labelWidth">
+            <el-form-item label="操作人" :label-width="labelWidth" v-if="disabled">
                 <el-input v-model="form.operateName" :disabled="disabled" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="操作时间" :label-width="labelWidth">
+            <el-form-item label="操作时间" :label-width="labelWidth" v-if="disabled">
                 <el-input v-model="form.operateTime" :disabled="disabled" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="操作IP" :label-width="labelWidth">
+            <el-form-item label="操作IP" :label-width="labelWidth" v-if="disabled">
                 <el-input v-model="form.operateIp" :disabled="disabled" size="small"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="handleClose">确 定</el-button>
+            <el-button type="primary"  @click="submitEdit" :disabled="disabled" >确 定</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
+  import Treeselect from '@riophae/vue-treeselect'
+  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
   export default {
+    components: { Treeselect },
     name: "detail",
     props: {
       visible:{
@@ -44,48 +54,29 @@
       disabled:{
         type:Boolean,default:true
       },
+      title:{
+        type:String,default:''
+      },
+      depts:{type:Array,default:[]},
       labelWidth: {type:String,default:'100px'}
     },
     methods: {
       handleClose() {
         this.$emit('closeDialog');
+      },
+      submitEdit(){
+        this.$emit('submitEdit',this.from);
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-    .el-textarea__inner {
-        resize: none;
-    }
-
     .el-form-item{
         margin-bottom: 10px;
     }
-
-    .dialog {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-
-        .el-dialog {
-            margin: 0 auto !important;
-            width: 30%;
-            height: 90%;
-            overflow: hidden;
-
-            .el-dialog__body {
-                position: absolute;
-                left: 0;
-                top: 54px;
-                bottom: 0;
-                right: 0;
-                padding: 0;
-                z-index: 1;
-                overflow: hidden;
-                overflow-y: auto;
-            }
-        }
+   /deep/ .vue-treeselect__control{
+       display: inherit !important;
+       height: 36px !important;
     }
 </style>

@@ -22,3 +22,19 @@ export function del(id) {
     method: 'delete',
   })
 }
+
+export function superior(params) {
+  return request({
+    url: `api/dept/superior`,
+    method: 'get',
+    params
+  })
+}
+
+export function edit(data) {
+  return request({
+    url: `api/dept/edit`,
+    method: 'post',
+    data
+  })
+}
