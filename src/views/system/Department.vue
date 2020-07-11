@@ -37,6 +37,7 @@
         </el-form>
 
         <el-table :data="tableData"
+                  @filter-change="filterHandler"
                   :row-style="{height:'20px'}"
                   :cell-style="{padding:'5px'}"
                   max-height="480"
@@ -59,7 +60,10 @@
                     label="状态"
                     width="100"
                     header-align="center"
-                    align="center">
+                    align="center"
+                    column-key="status"
+                    :filter-multiple="false"
+                    :filters="[{text: '正常', value: '1'}, {text: '禁用', value: '0'}]">
                 <template slot-scope="scope">
                     <el-switch
                         v-model="scope.row.status === 1"
@@ -74,7 +78,8 @@
                     label="排序"
                     width="100"
                     header-align="center"
-                    align="center">
+                    align="center"
+                    sortable>
             </el-table-column>
             <el-table-column
                     prop="operateName"
@@ -105,7 +110,7 @@
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
-                    <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status !== 1"></el-button>
+                    <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1 ||scope.row.hasChildren"></el-button>
                     <el-button @click="up(scope.row)" type="info" size="small" icon="el-icon-arrow-up"></el-button>
                     <el-button @click="down(scope.row)" type="info" size="small" icon="el-icon-arrow-down"></el-button>
                 </template>
@@ -306,6 +311,12 @@
           });
           this.onSubmit();
         }).catch(()=>{})
+      },
+      filterHandler(filters){
+        if(filters.status){
+          this.status = filters.status[0]
+        }
+        this.onSubmit();
       }
     },
     created() {
