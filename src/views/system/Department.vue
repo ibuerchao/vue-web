@@ -99,13 +99,15 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="150"
+                    width="250"
                     align="center"
                     header-align="center">
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
                     <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status !== 1"></el-button>
+                    <el-button @click="up(scope.row)" type="info" size="small" icon="el-icon-arrow-up"></el-button>
+                    <el-button @click="down(scope.row)" type="info" size="small" icon="el-icon-arrow-down"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -127,7 +129,7 @@
 
 <script>
 
-  import {list,detail,del,superior,add,edit,updateStatus} from '@/api/dept';
+  import {list,detail,del,superior,add,edit,updateStatus,up,down} from '@/api/dept';
   import Detail from "@/views/system/dept/detail";
 
   export default {
@@ -286,6 +288,24 @@
           this.onSubmit();
         }).catch(()=>{})
         this.visible=false;
+      },
+      up(row){
+        up(row.id).then(()=>{
+          this.$message({
+            message: '上移成功',
+            type: 'success'
+          });
+          this.onSubmit();
+        }).catch(()=>{})
+      },
+      down(row){
+        down(row.id).then(()=>{
+          this.$message({
+            message: '下移成功',
+            type: 'success'
+          });
+          this.onSubmit();
+        }).catch(()=>{})
       }
     },
     created() {

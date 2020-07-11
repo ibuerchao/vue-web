@@ -54,3 +54,17 @@ export function updateStatus(data) {
     data
   })
 }
+
+export function up(id) {
+  return request({
+    url: `api/dept/up/${id}`,
+    method: 'get',
+  })
+}
+
+export function down(id) {
+  return request({
+    url: `api/dept/down/${id}`,
+    method: 'get',
+  })
+}
