@@ -31,6 +31,14 @@ export function superior(params) {
   })
 }
 
+export function add(data) {
+  return request({
+    url: `api/dept/add`,
+    method: 'post',
+    data
+  })
+}
+
 export function edit(data) {
   return request({
     url: `api/dept/edit`,
@@ -38,7 +46,6 @@ export function edit(data) {
     data
   })
 }
-
 
 export function updateStatus(data) {
   return request({

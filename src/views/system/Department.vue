@@ -31,6 +31,9 @@
             <el-form-item>
                 <el-button type="warning" @click="reset()" size="small" icon="el-icon-refresh-right">重置</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button type="success" @click="add()" size="small" icon="el-icon-circle-plus">新增</el-button>
+            </el-form-item>
         </el-form>
 
         <el-table :data="tableData"
@@ -102,7 +105,7 @@
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
-                    <el-button @click="delete(scope.row)" type="danger" size="small" icon="el-icon-delete"></el-button>
+                    <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status !== 1"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -117,13 +120,14 @@
                     :total="total">
             </el-pagination>
         </div>
-        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" @closeDialog="closeDialog" @submitEdit="submitEdit(form)"></Detail>
+        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
+                @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
     </el-scrollbar>
 </template>
 
 <script>
 
-  import {list,detail,del,superior,edit,updateStatus} from '@/api/dept';
+  import {list,detail,del,superior,add,edit,updateStatus} from '@/api/dept';
   import Detail from "@/views/system/dept/detail";
 
   export default {
@@ -143,12 +147,14 @@
         form:{},
         disabled:true,
         title:'',
-        depts:[]
+        depts:[],
+        create:false
       }
     },
     methods: {
       onSubmit() {
         this.tableData=[];
+        this.form = {};
         let start = null, end = null;
         if (this.selectTime) {
           start = this.selectTime[0];
@@ -209,6 +215,14 @@
         this.total=0;
         this.onSubmit();
       },
+      add(){
+        this.superior();
+        this.visible = true;
+        this.form.parentId=null;
+        this.disabled=false;
+        this.title='新增部门';
+        this.create = true;
+      },
       detail(row){
         detail(row.id).then(res=>{
           if (res.code===200){
@@ -233,9 +247,13 @@
           }
         }).catch(()=>{})
       },
-      delete(row){
-        del(row.id).then(res=>{
-          console.log(res)
+      del(row){
+        del(row.id).then(()=>{
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+            this.onSubmit();
         }).catch(()=>{})
       },
       closeDialog(){
@@ -252,6 +270,17 @@
         edit(data).then(()=>{
           this.$message({
             message: '编辑成功',
+            type: 'success'
+          });
+          this.onSubmit();
+        }).catch(()=>{})
+        this.visible=false;
+      },
+      submitAdd(form){
+        let data = {id:form.id,name:form.name,status:form.status,remark:form.remark};
+        add(data).then(()=>{
+          this.$message({
+            message: '新增成功',
             type: 'success'
           });
           this.onSubmit();

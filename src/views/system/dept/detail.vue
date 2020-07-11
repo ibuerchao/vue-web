@@ -32,7 +32,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary"  @click="submitEdit" :disabled="disabled" >确 定</el-button>
+            <el-button type="primary"  @click="submitEdit" :disabled="disabled">确 定</el-button>
         </div>
     </el-dialog>
 </template>
@@ -58,6 +58,9 @@
         type:String,default:''
       },
       depts:{type:Array,default:[]},
+      create:{
+        type:Boolean,default:false
+      },
       labelWidth: {type:String,default:'100px'}
     },
     methods: {
@@ -65,7 +68,11 @@
         this.$emit('closeDialog');
       },
       submitEdit(){
-        this.$emit('submitEdit',this.from);
+        if (this.create){
+          this.$emit('submitAdd',this.from);
+        }else {
+            this.$emit('submitEdit',this.from);
+        }
       }
     }
   }
