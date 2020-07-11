@@ -38,3 +38,12 @@ export function edit(data) {
     data
   })
 }
+
+
+export function updateStatus(data) {
+  return request({
+    url: `api/dept/update/status`,
+    method: 'post',
+    data
+  })
+}

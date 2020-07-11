@@ -123,7 +123,7 @@
 
 <script>
 
-  import {list,detail,del,superior,edit} from '@/api/dept';
+  import {list,detail,del,superior,edit,updateStatus} from '@/api/dept';
   import Detail from "@/views/system/dept/detail";
 
   export default {
@@ -175,6 +175,14 @@
         } else {
           row.status = 1;
         }
+        let data = {id:row.id,status:row.status};
+        updateStatus(data).then(()=>{
+            this.$message({
+             message: '更新成功',
+             type: 'success'
+            });
+        this.onSubmit();
+      }).catch(()=>{})
       },
       load(row,treeNode,resolve){
         let data = {parentId:row.id};
@@ -247,12 +255,7 @@
             type: 'success'
           });
           this.onSubmit();
-        }).catch(()=>{
-          this.$message({
-            message: '编辑失败',
-            type: 'error'
-          });
-        })
+        }).catch(()=>{})
         this.visible=false;
       }
     },
