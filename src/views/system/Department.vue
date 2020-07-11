@@ -39,6 +39,7 @@
         <el-table :data="tableData"
                   @filter-change="filterHandler"
                   @sort-change='sortHandler'
+                  ref="filterTable"
                   :row-style="{height:'20px'}"
                   :cell-style="{padding:'5px'}"
                   max-height="480"
@@ -224,6 +225,8 @@
         this.currentPage= 1;
         this.pageSize=10;
         this.total=0;
+        this.clearFilter();
+        this.clearSort();
         this.onSubmit();
       },
       add(){
@@ -333,6 +336,12 @@
           this.order = prop+' asc'
         }
         this.onSubmit();
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
+      clearSort() {
+        this.$refs.filterTable.clearSort();
       }
     },
     created() {
