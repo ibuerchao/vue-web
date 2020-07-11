@@ -38,6 +38,7 @@
 
         <el-table :data="tableData"
                   @filter-change="filterHandler"
+                  @sort-change='sortHandler'
                   :row-style="{height:'20px'}"
                   :cell-style="{padding:'5px'}"
                   max-height="480"
@@ -79,7 +80,7 @@
                     width="100"
                     header-align="center"
                     align="center"
-                    sortable>
+                    sortable='custom'>
             </el-table-column>
             <el-table-column
                     prop="operateName"
@@ -93,7 +94,8 @@
                     label="操作时间"
                     width="152"
                     header-align="center"
-                    align="center">
+                    align="center"
+                    sortable='custom'>
             </el-table-column>
             <el-table-column
                     prop="remark"
@@ -146,6 +148,7 @@
         status: null,
         selectTime: null,
         operateName: null,
+        order:'seq asc',
         tableData: [],
         currentPage:1,
         pageSize:10,
@@ -174,7 +177,8 @@
           end: end,
           operateName: this.operateName,
           offset:(this.currentPage -1)*this.pageSize,
-          limit:this.pageSize
+          limit:this.pageSize,
+          order:this.order
         };
         list(data).then(res => {
           this.tableData = res.data;
@@ -315,6 +319,18 @@
       filterHandler(filters){
         if(filters.status){
           this.status = filters.status[0]
+        }
+        this.onSubmit();
+      },
+      sortHandler(column){
+        let prop = column.prop;
+        if (column.prop ==='operateTime'){
+          prop = 'operate_time'
+        }
+        if (column.order === 'descending') {
+          this.order = prop+' desc'
+        } else {
+          this.order = prop+' asc'
         }
         this.onSubmit();
       }
