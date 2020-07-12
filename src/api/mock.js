@@ -9,7 +9,7 @@ const data = [
       {
         name: '部门管理',
         path: '/system/dept',
-        component: 'system/Department',
+        component: 'system/dept/Department',
         hidden: false,
         meta:{'icon':'el-icon-message'},
       },
