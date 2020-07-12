@@ -233,7 +233,7 @@
       add(){
         this.superior();
         this.visible = true;
-        this.form.parentId=null;
+        this.form={};
         this.disabled=false;
         this.title='新增部门';
         this.create = true;
