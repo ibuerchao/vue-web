@@ -1,131 +1,144 @@
 <template>
-    <el-scrollbar>
-        <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
-                <el-input v-model="username" placeholder="输入用户名称或邮箱搜索" size="small" clearable style="width: 190px"></el-input>
-            </el-form-item>
-<!--            <el-form-item>-->
-<!--                <el-input v-model="name" placeholder="输入部门名称搜索" size="small" clearable style="width: 150px"></el-input>-->
-<!--            </el-form-item>-->
-            <el-form-item>
-                <el-date-picker
-                        size="small"
-                        v-model="selectTime"
-                        type="datetimerange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        value-format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit" size="small" icon="el-icon-search">查询</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="warning" @click="reset()" size="small" icon="el-icon-refresh-right">重置</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="success" @click="add()" size="small" icon="el-icon-circle-plus">新增</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="info" @click="add()" size="small" icon="el-icon-document">导出</el-button>
-            </el-form-item>
-        </el-form>
+    <el-container style="height: 100%;">
+        <el-header style="font-size: 12px;padding: 0">
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item>
+                    <el-input v-model="deptname" placeholder="输入部门名称搜索" size="small" clearable style="width: 210px"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="username" placeholder="输入用户名称或邮箱搜索" size="small" clearable style="width: 190px"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-date-picker
+                            size="small"
+                            v-model="selectTime"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            value-format="yyyy-MM-dd HH:mm:ss">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit" size="small" icon="el-icon-search">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="warning" @click="reset()" size="small" icon="el-icon-refresh-right">重置</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="success" @click="add()" size="small" icon="el-icon-circle-plus">新增</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="info" @click="add()" size="small" icon="el-icon-document">导出</el-button>
+                </el-form-item>
+            </el-form>
+        </el-header>
+        <el-container>
+            <el-aside width="200px">
+                <el-tree :data="tree" v-model="deptname" show-checkbox node-key="id"
+                         :filter-node-method="filterNode" highlight-current
+                         ref="tree"></el-tree>
+            </el-aside>
+            <el-main style="background-color: #FFFFFF">
+                <el-scrollbar class="user">
 
-        <el-table :data="tableData"
-                  @filter-change="filterHandler"
-                  @sort-change='sortHandler'
-                  ref="filterTable"
-                  :row-style="{height:'20px'}"
-                  :cell-style="{padding:'4px'}"
-                  max-height="480"
-                  style="font-size: 13px;"
-                  row-key="id"
-                  stripe>
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column
-                    prop="username"
-                    label="用户名称"
-                    width="200"
-                    header-align="center"
-                    align="center"
-                    :show-overflow-tooltip="true">
-            </el-table-column>
-            <el-table-column
-                    prop="deptname"
-                    label="所在部门"
-                    width="150"
-                    header-align="center"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="email"
-                    label="邮箱"
-                    width="180"
-                    header-align="center"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="telephone"
-                    label="手机号"
-                    width="120"
-                    header-align="center"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="status"
-                    label="状态"
-                    width="110"
-                    header-align="center"
-                    align="center"
-                    column-key="status"
-                    :filters="[{text: '冻结', value: '0'}, {text: '正常', value: '1'},{text: '删除', value: '2'}, {text: '未激活', value: '3'},{text: '锁定', value: '4'}]">
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.status" placeholder="状态" size="small" style="width: 90px"
-                               @change="changeStatus(scope.row)">
-                        <el-option label="冻结" :value="0"></el-option>
-                        <el-option label="正常" :value="1"></el-option>
-                        <el-option label="删除" :value="2"></el-option>
-                        <el-option label="未激活" :value="3"></el-option>
-                        <el-option label="锁定" :value="4"></el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="operateTime"
-                    label="操作时间"
-                    width="152"
-                    header-align="center"
-                    align="center"
-                    sortable='custom'>
-            </el-table-column>
-            <el-table-column
-                    fixed="right"
-                    label="操作"
-                    width="180"
-                    align="center"
-                    header-align="center">
-                <template slot-scope="scope">
-                    <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
-                    <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
-                    <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="pagination">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-sizes="[10, 20, 50, 100]"
-                    :page-size="10"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-            </el-pagination>
-        </div>
-        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
-                @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
-    </el-scrollbar>
+                    <el-table :data="tableData"
+                              @filter-change="filterHandler"
+                              @sort-change='sortHandler'
+                              ref="filterTable"
+                              :row-style="{height:'20px'}"
+                              :cell-style="{padding:'4px'}"
+                              max-height="480"
+                              style="font-size: 13px;"
+                              row-key="id"
+                              stripe>
+                        <el-table-column type="selection" width="55"></el-table-column>
+                        <el-table-column
+                                prop="username"
+                                label="用户名称"
+                                width="150"
+                                header-align="center"
+                                align="center"
+                                :show-overflow-tooltip="true">
+                        </el-table-column>
+                        <el-table-column
+                                prop="deptname"
+                                label="所在部门"
+                                width="150"
+                                header-align="center"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="email"
+                                label="邮箱"
+                                width="180"
+                                header-align="center"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="telephone"
+                                label="手机号"
+                                width="110"
+                                header-align="center"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="status"
+                                label="状态"
+                                width="110"
+                                header-align="center"
+                                align="center"
+                                column-key="status"
+                                :filters="[{text: '冻结', value: '0'}, {text: '正常', value: '1'},{text: '删除', value: '2'}, {text: '未激活', value: '3'},{text: '锁定', value: '4'}]">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.status" placeholder="状态" size="small" style="width: 90px"
+                                           @change="changeStatus(scope.row)">
+                                    <el-option label="冻结" :value="0"></el-option>
+                                    <el-option label="正常" :value="1"></el-option>
+                                    <el-option label="删除" :value="2"></el-option>
+                                    <el-option label="未激活" :value="3"></el-option>
+                                    <el-option label="锁定" :value="4"></el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="operateTime"
+                                label="操作时间"
+                                width="152"
+                                header-align="center"
+                                align="center"
+                                sortable='custom'>
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="150"
+                                align="center"
+                                header-align="center">
+                            <template slot-scope="scope">
+                                <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
+                                <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
+                                <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="pagination">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currentPage"
+                                :page-sizes="[10, 20, 50, 100]"
+                                :page-size="10"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="total">
+                        </el-pagination>
+                    </div>
+                    <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
+                            @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
+                </el-scrollbar>
+            </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <script>
@@ -140,6 +153,8 @@
     data() {
       return {
         username: null,
+        deptname: null,
+        deptId:[],
         status: [],
         selectTime: null,
         order:'operate_time desc',
@@ -152,11 +167,23 @@
         disabled:true,
         title:'',
         depts:[],
-        create:false
+        create:false,
+        tree:[],
+        first:true
+      }
+    },
+    watch: {
+      deptname(val) {
+        this.$refs.tree.filter(val);
       }
     },
     methods: {
       onSubmit() {
+        if (this.first){
+          this.first = false;
+        }else{
+          this.deptId = this.$refs.tree.getCheckedKeys()
+        }
         this.tableData=[];
         this.form = {};
         let start = null, end = null;
@@ -166,6 +193,7 @@
         }
         let data = {
           username: this.username,
+          deptId:this.deptId,
           status: this.status,
           start: start,
           end: end,
@@ -198,8 +226,10 @@
         this.onSubmit();
       },
       reset(){
+        this.$refs.tree.setCheckedKeys([]);
         this.username= null;
         this.status=  [];
+        this.deptId = [];
         this.selectTime=  null;
         this.tableData= [];
         this.currentPage= 1;
@@ -322,11 +352,19 @@
       },
       clearSort() {
         this.$refs.filterTable.clearSort();
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
       }
     },
     created() {
       this.tableData=[];
       this.onSubmit();
+      let params = {id:'root'}
+      superior(params).then(res=>{
+        this.tree=res.data;
+      }).catch(()=>{})
     }
   }
 </script>
