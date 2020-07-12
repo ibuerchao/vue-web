@@ -32,6 +32,9 @@ export function superior(params) {
 }
 
 export function add(data) {
+  if (!data.parentId){
+    data.parentId = 'root';
+  }
   return request({
     url: `api/dept/add`,
     method: 'post',

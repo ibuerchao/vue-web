@@ -130,8 +130,8 @@
                     :total="total">
             </el-pagination>
         </div>
-        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
-                @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
+        <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create" :oldParentId="oldParentId"
+                @closeDialog="closeDialog" @submitEdit="submitEdit(form,oldParentId)" @submitAdd="submitAdd(form)"></Detail>
     </el-scrollbar>
 </template>
 
@@ -159,7 +159,8 @@
         disabled:true,
         title:'',
         depts:[],
-        create:false
+        create:false,
+        oldParentId:''
       }
     },
     methods: {
@@ -258,6 +259,8 @@
             }
             this.disabled=false;
             this.title='编辑部门';
+            this.create = false;
+            this.oldParentId = res.data.parentId;
           }
         }).catch(()=>{})
       },
@@ -267,6 +270,7 @@
               message: '删除成功',
               type: 'success'
             });
+            this.$set(this.$refs.filterTable.store.states.lazyTreeNodeMap, row.parentId, []);
             this.onSubmit();
         }).catch(()=>{})
       },
@@ -279,19 +283,20 @@
           this.depts=res.data;
         }).catch(()=>{})
       },
-      submitEdit(form){
+      submitEdit(form,oldParentId){
         let data = {id:form.id,name:form.name,parentId:form.parentId,status:form.status,remark:form.remark};
         edit(data).then(()=>{
           this.$message({
             message: '编辑成功',
             type: 'success'
           });
+          this.$set(this.$refs.filterTable.store.states.lazyTreeNodeMap, oldParentId, []);
           this.onSubmit();
         }).catch(()=>{})
         this.visible=false;
       },
       submitAdd(form){
-        let data = {id:form.id,name:form.name,status:form.status,remark:form.remark};
+        let data = {id:form.id,name:form.name,parentId:form.parentId,status:form.status,remark:form.remark};
         add(data).then(()=>{
           this.$message({
             message: '新增成功',

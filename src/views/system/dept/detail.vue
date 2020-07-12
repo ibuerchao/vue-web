@@ -61,6 +61,9 @@
       create:{
         type:Boolean,default:false
       },
+      oldParentId:{
+        type:String,default:''
+      },
       labelWidth: {type:String,default:'100px'}
     },
     methods: {
@@ -71,7 +74,7 @@
         if (this.create){
           this.$emit('submitAdd',this.from);
         }else {
-            this.$emit('submitEdit',this.from);
+            this.$emit('submitEdit',this.from,this.oldParentId);
         }
       }
     }
