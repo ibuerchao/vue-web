@@ -291,9 +291,9 @@
             type: 'success'
           });
           this.$set(this.$refs.filterTable.store.states.lazyTreeNodeMap, oldParentId, []);
+          this.visible=false;
           this.onSubmit();
         }).catch(()=>{})
-        this.visible=false;
       },
       submitAdd(form){
         let data = {id:form.id,name:form.name,parentId:form.parentId,status:form.status,remark:form.remark};
@@ -302,9 +302,9 @@
             message: '新增成功',
             type: 'success'
           });
+          this.visible=false;
           this.onSubmit();
         }).catch(()=>{})
-        this.visible=false;
       },
       up(row){
         up(row.id).then(()=>{
