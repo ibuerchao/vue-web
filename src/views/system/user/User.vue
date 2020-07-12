@@ -35,7 +35,7 @@
         </el-header>
         <el-container>
             <el-aside width="200px">
-                <el-scrollbar style="height: 100%">
+                <el-scrollbar style="height: 480px">
                     <el-tree :data="tree" v-model="deptname" show-checkbox node-key="id"
                              :filter-node-method="filterNode" highlight-current
                              ref="tree"></el-tree>
