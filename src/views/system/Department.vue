@@ -41,7 +41,7 @@
                   @sort-change='sortHandler'
                   ref="filterTable"
                   :row-style="{height:'20px'}"
-                  :cell-style="{padding:'5px'}"
+                  :cell-style="{padding:'4px'}"
                   max-height="480"
                   style="font-size: 13px;"
                   row-key="id"
