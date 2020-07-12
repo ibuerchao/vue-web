@@ -1,45 +1,47 @@
 import request from '@/utils/request';
 
-//用户登录
-export function signIn(data) {
+export function list(data) {
   return request({
-    url: 'api/help/sign_in',
+    url: 'api/user/list',
     method: 'post',
     data
   })
 }
 
-//用户注册
-export function signUp(data) {
+export function detail(id) {
   return request({
-    url: 'api/help/sign_up',
-    method: 'post',
-    data
-  })
-}
-
-//用户登出
-export function signOut(data) {
-  return request({
-    url: 'api/user/sign_out',
-    method: 'post',
-    data
-  })
-}
-
-//获取邮箱验证码
-export function getCode(params) {
-  return request({
-    url: 'api/help/code',
+    url: `api/user/detail/${id}`,
     method: 'get',
-    params
   })
 }
 
-//重置密码
-export function resetPassword(data) {
+export function del(id) {
   return request({
-    url: 'api/help/reset/password',
+    url: `api/user/delete/${id}`,
+    method: 'delete',
+  })
+}
+
+
+export function add(data) {
+  return request({
+    url: `api/user/add`,
+    method: 'post',
+    data
+  })
+}
+
+export function edit(data) {
+  return request({
+    url: `api/user/edit`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateStatus(data) {
+  return request({
+    url: `api/user/update/status`,
     method: 'post',
     data
   })

@@ -16,7 +16,7 @@ const data = [
       {
         name: '用户管理',
         path: '/system/user',
-        component: 'system/User',
+        component: 'system/user/User',
         hidden: false,
         meta:{'icon':'el-icon-loading'},
       },
