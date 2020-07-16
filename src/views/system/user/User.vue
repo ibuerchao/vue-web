@@ -42,8 +42,7 @@
                 </el-scrollbar>
             </el-aside>
             <el-main style="background-color: #FFFFFF">
-                <el-scrollbar class="user">
-
+                <el-scrollbar>
                     <el-table :data="tableData"
                               @filter-change="filterHandler"
                               @sort-change='sortHandler'

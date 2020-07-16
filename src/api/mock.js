@@ -23,7 +23,7 @@ const data = [
       {
         name: '角色管理',
         path: '/system/role',
-        component: 'system/Role',
+        component: 'system/role/Role',
         hidden: false,
         meta:{'icon':'el-icon-message'},
       },
