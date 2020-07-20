@@ -29,7 +29,7 @@
 
 <script>
   import {encrypt} from '@/utils/rsa'
-  import {signUp} from "@/api/user";
+  import {signUp} from "@/api/help";
 
   export default {
     data() {

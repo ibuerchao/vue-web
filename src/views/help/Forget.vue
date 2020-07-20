@@ -32,7 +32,7 @@
 
 <script>
   import {encrypt} from '@/utils/rsa'
-  import {getCode, resetPassword} from "@/api/user";
+  import {getCode, resetPassword} from "@/api/help";
 
   export default {
     data() {

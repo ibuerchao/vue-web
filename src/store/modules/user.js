@@ -1,5 +1,5 @@
 import { getToken, setToken,removeToken } from '@/utils/auth'
-import {signIn,signOut} from '@/api/user'
+import {signIn,signOut} from '@/api/help'
 import store from "@/store/store";
 
 const user = {
