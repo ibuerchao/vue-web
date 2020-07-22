@@ -28,6 +28,13 @@ const data = [
         meta:{'icon':'el-icon-message'},
       },
       {
+        name: '模块管理',
+        path: '/system/res/module',
+        component: 'system/res/module/Module',
+        hidden: false,
+        meta:{'icon':'el-icon-message'},
+      },
+      {
         name: '资源管理',
         path: '/system/res',
         component: 'system/Resource',

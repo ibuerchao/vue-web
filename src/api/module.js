@@ -1,10 +1,9 @@
 import request from '@/utils/request';
 import {removePropertyOfNull} from '@/utils/common'
 
-//部门列表
 export function list(data) {
   return request({
-    url: 'api/dept/list',
+    url: 'api/res/module/list',
     method: 'post',
     data
   })
@@ -12,21 +11,21 @@ export function list(data) {
 
 export function detail(id) {
   return request({
-    url: `api/dept/detail/${id}`,
+    url: `api/res/module/detail/${id}`,
     method: 'get',
   })
 }
 
 export function del(id) {
   return request({
-    url: `api/dept/delete/${id}`,
+    url: `api/res/module/delete/${id}`,
     method: 'delete',
   })
 }
 
 export function superior(params) {
   return request({
-    url: `api/dept/superior`,
+    url: `api/res/module/superior`,
     method: 'get',
     params
   })
@@ -37,7 +36,7 @@ export function add(data) {
     data.parentId = 'root';
   }
   return request({
-    url: `api/dept/add`,
+    url: `api/res/module/add`,
     method: 'post',
     data
   })
@@ -46,15 +45,15 @@ export function add(data) {
 export function edit(data) {
   let temp = removePropertyOfNull(data);
   return request({
-    url: `api/dept/edit`,
+    url: `api/res/module/edit`,
     method: 'post',
-    data: temp
+    data:temp
   })
 }
 
 export function updateStatus(data) {
   return request({
-    url: `api/dept/update/status`,
+    url: `api/res/module/update/status`,
     method: 'post',
     data
   })
@@ -62,14 +61,14 @@ export function updateStatus(data) {
 
 export function up(id) {
   return request({
-    url: `api/dept/up/${id}`,
+    url: `api/res/module/up/${id}`,
     method: 'get',
   })
 }
 
 export function down(id) {
   return request({
-    url: `api/dept/down/${id}`,
+    url: `api/res/module/down/${id}`,
     method: 'get',
   })
 }
