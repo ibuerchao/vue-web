@@ -108,7 +108,8 @@
                                 label="类型"
                                 width="70"
                                 header-align="center"
-                                align="center">
+                                align="center"
+                                :formatter =getTextStatus>
                         </el-table-column>
                         <el-table-column
                                 prop="url"
@@ -381,6 +382,16 @@
       filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
+      },
+      getTextStatus(row) {
+        let value = row.type;
+        if (value === 1) {
+          return '菜单';
+        } else if (value === 2) {
+          return '按钮';
+        } else if (value === 3) {
+          return '其他';
+        }
       }
     },
     created() {
