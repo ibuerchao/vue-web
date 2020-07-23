@@ -37,7 +37,7 @@ const data = [
       {
         name: '资源管理',
         path: '/system/res',
-        component: 'system/Resource',
+        component: 'system/res/res/Resource',
         hidden: false,
         meta:{'icon':'el-icon-message'},
       },

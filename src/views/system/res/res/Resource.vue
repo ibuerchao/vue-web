@@ -3,10 +3,13 @@
         <el-header style="font-size: 12px;padding: 0">
             <el-form :inline="true" class="demo-form-inline">
                 <el-form-item>
-                    <el-input v-model="deptname" placeholder="输入部门名称搜索" size="small" clearable style="width: 210px"></el-input>
+                    <el-input v-model="moduleName" placeholder="输入模块名称搜索" size="small" clearable style="width: 210px"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="username" placeholder="输入用户名称或邮箱搜索" size="small" clearable style="width: 190px"></el-input>
+                    <el-input v-model="name" placeholder="输入资源名称搜索" size="small" clearable style="width: 150px"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="code" placeholder="输入资源编码搜索" size="small" clearable style="width: 150px"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-date-picker
@@ -36,7 +39,7 @@
         <el-container>
             <el-aside width="200px">
                 <el-scrollbar style="height: 480px">
-                    <el-tree :data="tree" v-model="deptname" show-checkbox node-key="id"
+                    <el-tree :data="tree" v-model="moduleName" show-checkbox node-key="id"
                              :filter-node-method="filterNode" highlight-current
                              ref="tree"></el-tree>
                 </el-scrollbar>
@@ -55,31 +58,32 @@
                               stripe>
                         <el-table-column type="selection" width="55"></el-table-column>
                         <el-table-column
-                                prop="username"
-                                label="用户名称"
+                                prop="name"
+                                label="资源名称"
+                                width="100"
+                                header-align="center"
+                                align="center"
+                                :show-overflow-tooltip="true">
+                        </el-table-column>
+                        <el-table-column
+                                prop="code"
+                                label="资源编码"
                                 width="150"
                                 header-align="center"
                                 align="center"
                                 :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column
-                                prop="deptname"
-                                label="所在部门"
-                                width="150"
+                                prop="moduleName"
+                                label="所在模块"
+                                width="100"
                                 header-align="center"
                                 align="center">
                         </el-table-column>
                         <el-table-column
-                                prop="email"
-                                label="邮箱"
-                                width="180"
-                                header-align="center"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                prop="telephone"
-                                label="手机号"
-                                width="110"
+                                prop="seq"
+                                label="序号"
+                                width="70"
                                 header-align="center"
                                 align="center">
                         </el-table-column>
@@ -90,17 +94,28 @@
                                 header-align="center"
                                 align="center"
                                 column-key="status"
-                                :filters="[{text: '冻结', value: '0'}, {text: '正常', value: '1'},{text: '删除', value: '2'}, {text: '未激活', value: '3'},{text: '锁定', value: '4'}]">
+                                :filters="[{text: '禁用', value: '0'}, {text: '正常', value: '1'}]">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.status" placeholder="状态" size="small" style="width: 90px"
                                            @change="changeStatus(scope.row)">
-                                    <el-option label="冻结" :value="0"></el-option>
+                                    <el-option label="禁用" :value="0"></el-option>
                                     <el-option label="正常" :value="1"></el-option>
-                                    <el-option label="删除" :value="2"></el-option>
-                                    <el-option label="未激活" :value="3"></el-option>
-                                    <el-option label="锁定" :value="4"></el-option>
                                 </el-select>
                             </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="type"
+                                label="类型"
+                                width="70"
+                                header-align="center"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="url"
+                                label="URL"
+                                width="150"
+                                header-align="center"
+                                align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="operateTime"
@@ -134,8 +149,8 @@
                                 :total="total">
                         </el-pagination>
                     </div>
-                    <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
-                            @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
+                    <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :modules="modules" :create="create" :oldModuleId="oldModuleId"
+                            @closeDialog="closeDialog" @submitEdit="submitEdit(form,oldModuleId)" @submitAdd="submitAdd(form)"></Detail>
                 </el-scrollbar>
             </el-main>
         </el-container>
@@ -144,18 +159,19 @@
 
 <script>
 
-  import {list,detail,del,add,edit,updateStatus} from '@/api/user';
-  import {superior} from '@/api/dept';
-  import Detail from "@/views/system/user/detail";
+  import {list,detail,del,add,edit,updateStatus} from '@/api/res';
+  import {superior} from '@/api/module';
+  import Detail from "@/views/system/res/res/detail";
 
   export default {
     name: "User",
     components: {Detail},
     data() {
       return {
-        username: null,
-        deptname: null,
-        deptId:[],
+        name: null,
+        moduleName: null,
+        code:null,
+        moduleId:[],
         status: [],
         selectTime: null,
         order:'operate_time desc',
@@ -167,14 +183,15 @@
         form:{},
         disabled:true,
         title:'',
-        depts:[],
+        modules:[],
         create:false,
         tree:[],
-        first:true
+        first:true,
+        oldModuleId:''
       }
     },
     watch: {
-      deptname(val) {
+      moduleName(val) {
         this.$refs.tree.filter(val);
       }
     },
@@ -183,7 +200,7 @@
         if (this.first){
           this.first = false;
         }else{
-          this.deptId = this.$refs.tree.getCheckedKeys()
+          this.moduleId = this.$refs.tree.getCheckedKeys()
         }
         this.tableData=[];
         this.form = {};
@@ -193,8 +210,9 @@
           end = this.selectTime[1];
         }
         let data = {
-          username: this.username,
-          deptId:this.deptId,
+          name: this.name,
+          code: this.code,
+          moduleId:this.moduleId,
           status: this.status,
           start: start,
           end: end,
@@ -228,10 +246,11 @@
       },
       reset(){
         this.$refs.tree.setCheckedKeys([]);
-        this.username= null;
-        this.deptname = null;
+        this.name= null;
+        this.code= null;
+        this.moduleName = null;
         this.status=  [];
-        this.deptId = [];
+        this.moduleId = [];
         this.selectTime=  null;
         this.tableData= [];
         this.currentPage= 1;
@@ -246,7 +265,7 @@
         this.visible = true;
         this.form={};
         this.disabled=false;
-        this.title='新增用户';
+        this.title='新增资源';
         this.create = true;
       },
       detail(row){
@@ -255,7 +274,7 @@
             this.visible = true;
             this.form = res.data;
             this.disabled=true;
-            this.title='用户详情';
+            this.title='资源详情';
           }
         }).catch(()=>{})
       },
@@ -266,8 +285,9 @@
             this.visible = true;
             this.form = res.data;
             this.disabled=false;
-            this.title='编辑用户';
+            this.title='编辑资源';
             this.create = false;
+            this.oldModuleId = res.data.moduleId;
           }
         }).catch(()=>{})
       },
@@ -286,17 +306,18 @@
       superior(){
         let params = {id:'root',status:null}
         superior(params).then(res=>{
-          this.depts=res.data;
+          this.modules=res.data;
         }).catch(()=>{})
       },
-      submitEdit(form){
+      submitEdit(form,oldModuleId){
         let data = {
           id: form.id,
-          username: form.username,
+          name: form.name,
+          code: form.code,
+          moduleId: form.moduleId,
           status: form.status,
-          email: form.email,
-          deptId: form.deptId,
-          telephone: form.telephone,
+          type: form.type,
+          url: form.url,
           remark: form.remark
         };
         edit(data).then(()=>{
@@ -304,17 +325,19 @@
             message: '编辑成功',
             type: 'success'
           });
+          this.$set(this.$refs.filterTable.store.states.lazyTreeNodeMap, oldModuleId, []);
           this.visible=false;
           this.onSubmit();
         }).catch(()=>{})
       },
       submitAdd(form){
         let data = {
-          username: form.username,
+          name: form.name,
+          code: form.code,
+          moduleId: form.moduleId,
           status: form.status,
-          email: form.email,
-          deptId: form.deptId,
-          telephone: form.telephone,
+          type: form.type,
+          url: form.url,
           remark: form.remark
         };
         add(data).then(()=>{
