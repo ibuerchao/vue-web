@@ -57,7 +57,7 @@
                         <el-table-column
                                 prop="username"
                                 label="用户名称"
-                                width="150"
+                                width="145"
                                 header-align="center"
                                 align="center"
                                 :show-overflow-tooltip="true">
@@ -65,7 +65,7 @@
                         <el-table-column
                                 prop="deptname"
                                 label="所在部门"
-                                width="150"
+                                width="145"
                                 header-align="center"
                                 align="center">
                         </el-table-column>
@@ -113,12 +113,13 @@
                         <el-table-column
                                 fixed="right"
                                 label="操作"
-                                width="150"
+                                width="190"
                                 align="center"
                                 header-align="center">
                             <template slot-scope="scope">
                                 <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                                 <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
+                                <el-button @click="roles(scope.row)" type="warning" size="small" icon="el-icon-s-check"></el-button>
                                 <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
                             </template>
                         </el-table-column>
@@ -136,6 +137,7 @@
                     </div>
                     <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :depts="depts" :create="create"
                             @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
+                    <UserRole :visible="role_visible" :title="role_title" :data="role_data" @cancel="cancel"></UserRole>
                 </el-scrollbar>
             </el-main>
         </el-container>
@@ -145,12 +147,14 @@
 <script>
 
   import {list,detail,del,add,edit,updateStatus} from '@/api/user';
+  import {list as role_user_list} from '@/api/role_user';
   import {superior} from '@/api/dept';
   import Detail from "@/views/system/user/detail";
+  import UserRole from "@/views/system/user/userRole";
 
   export default {
     name: "User",
-    components: {Detail},
+    components: {Detail,UserRole},
     data() {
       return {
         username: null,
@@ -164,7 +168,10 @@
         pageSize:10,
         total:0,
         visible:false,
+        role_visible:false,
         form:{},
+        role_data:{},
+        role_title:'',
         disabled:true,
         title:'',
         depts:[],
@@ -271,6 +278,16 @@
           }
         }).catch(()=>{})
       },
+      roles(row){
+        let data = {id:row.id,type:2};
+        role_user_list(data).then(res=>{
+          if (res.code===200){
+            this.role_visible = true;
+            this.role_data = res.data;
+            this.role_title = row.username;
+          }
+        }).catch(()=>{})
+      },
       del(row){
         del(row.id).then(()=>{
           this.$message({
@@ -282,6 +299,9 @@
       },
       closeDialog(){
         this.visible=false;
+      },
+      cancel(){
+        this.role_visible=false;
       },
       superior(){
         let params = {id:'root',status:null}
