@@ -66,7 +66,7 @@
       title: {
         type: String, default: ''
       },
-      depts: {type: Array, default: []},
+      depts: {type: Array, default: ()=>[]},
       create: {
         type: Boolean, default: false
       },

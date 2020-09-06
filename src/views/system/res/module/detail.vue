@@ -60,7 +60,7 @@
       title:{
         type:String,default:''
       },
-      modules:{type:Array,default:[]},
+      modules:{type:Array,default: ()=>[]},
       create:{
         type:Boolean,default:false
       },
