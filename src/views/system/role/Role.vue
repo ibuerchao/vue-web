@@ -93,12 +93,13 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="150"
+                    width="190"
                     align="center"
                     header-align="center">
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
+                    <el-button @click="roles(scope.row)" type="warning" size="small" icon="el-icon-s-check"></el-button>
                     <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
                 </template>
             </el-table-column>
@@ -116,17 +117,20 @@
         </div>
         <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :create="create"
                 @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
+        <UserRole :visible="role_visible" :title="role_title" :data="role_data" @cancel="cancel"></UserRole>
     </el-scrollbar>
 </template>
 
 <script>
 
   import {list,detail,del,add,edit,updateStatus} from '@/api/role';
+  import {list as role_user_list} from '@/api/role_user';
   import Detail from "@/views/system/role/detail";
+  import UserRole from "@/views/system/role/userRole";
 
   export default {
     name: "Role",
-    components: {Detail},
+    components: {Detail,UserRole},
     data() {
       return {
         name: null,
@@ -142,7 +146,10 @@
         form:{},
         disabled:true,
         title:'',
-        create:false
+        create:false,
+        role_visible:false,
+        role_data:{},
+        role_title:'',
       }
     },
     methods: {
@@ -234,6 +241,16 @@
           }
         }).catch(()=>{})
       },
+      roles(row){
+        let data = {id:row.id,type:1};
+        role_user_list(data).then(res=>{
+          if (res.code===200){
+            this.role_visible = true;
+            this.role_data = res.data;
+            this.role_title = row.name;
+          }
+        }).catch(()=>{})
+      },
       del(row){
         del(row.id).then(()=>{
           this.$message({
@@ -245,6 +262,9 @@
       },
       closeDialog(){
         this.visible=false;
+      },
+      cancel(){
+        this.role_visible=false;
       },
       submitEdit(form){
         let data = {
