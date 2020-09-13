@@ -122,6 +122,7 @@
                 @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
         <UserRole :visible="role_visible" :title="role_title" :data="role_data" @cancel="cancel"></UserRole>
         <RoleOrg :data="role_org_data" :visible="role_org_visible" @cancel="cancel"></RoleOrg>
+        <RoleModule :data="role_module_data" :visible="role_module_visible" @cancel="cancel"></RoleModule>
     </el-scrollbar>
 </template>
 
@@ -135,10 +136,11 @@
   import Detail from "@/views/system/role/detail";
   import UserRole from "@/views/system/role/userRole";
   import RoleOrg from "@/views/system/role/roleOrg";
+  import RoleModule from "@/views/system/role/roleModule";
 
   export default {
     name: "Role",
-    components: {Detail,UserRole,RoleOrg},
+    components: {Detail,UserRole,RoleOrg,RoleModule},
     data() {
       return {
         name: null,
@@ -160,6 +162,8 @@
         role_title:'',
         role_org_data:{},
         role_org_visible:false,
+        role_module_data:{},
+        role_module_visible:false,
       }
     },
     methods: {
@@ -266,7 +270,13 @@
           }).catch(()=>{})
         }else if(type === 2){
           moduleTree(dataParams).then(res=>{
-            console.log(res)
+            this.role_module_visible = true;
+            this.role_module_data.data = res.data;
+            this.role_module_data.title = row.name;
+            this.role_module_data.roleId = row.id;
+          }).catch(()=>{})
+          role_res_list(selectParam).then(res=>{
+            this.role_module_data.value = res.data;
           }).catch(()=>{})
         }else{
           console.log(type)
@@ -299,6 +309,8 @@
         this.role_data={};
         this.role_org_visible = false;
         this.role_org_data={};
+        this.role_module_visible = false;
+        this.role_module_data={};
       },
       submitEdit(form){
         let data = {
