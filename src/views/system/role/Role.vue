@@ -99,9 +99,9 @@
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
-                    <el-button @click="org(scope.row,1)" type="warning" size="small" icon="el-icon-office-building"></el-button>
-                    <el-button @click="org(scope.row,2)" type="warning" size="small" icon="el-icon-share"></el-button>
-                    <el-button @click="org(scope.row,3)" type="warning" size="small" icon="el-icon-tickets"></el-button>
+                    <el-button @click="roleRes(scope.row,1)" type="warning" size="small" icon="el-icon-office-building"></el-button>
+                    <el-button @click="roleRes(scope.row,2)" type="warning" size="small" icon="el-icon-share"></el-button>
+                    <el-button @click="roleRes(scope.row,3)" type="warning" size="small" icon="el-icon-tickets"></el-button>
                     <el-button @click="roles(scope.row)" type="warning" size="small" icon="el-icon-s-check"></el-button>
                     <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
                 </template>
@@ -123,6 +123,7 @@
         <RoleUser :data="role_user_data" :visible="role_user_visible" @cancel="cancel"></RoleUser>
         <RoleOrg :data="role_org_data" :visible="role_org_visible" @cancel="cancel"></RoleOrg>
         <RoleModule :data="role_module_data" :visible="role_module_visible" @cancel="cancel"></RoleModule>
+        <RoleRes :data="role_res_data" :visible="role_res_visible" @cancel="cancel"></RoleRes>
     </el-scrollbar>
 </template>
 
@@ -137,10 +138,11 @@
   import RoleUser from "@/views/system/role/roleUser";
   import RoleOrg from "@/views/system/role/roleOrg";
   import RoleModule from "@/views/system/role/roleModule";
+  import RoleRes from "@/views/system/role/roleRes";
 
   export default {
     name: "Role",
-    components: {Detail,RoleUser,RoleOrg,RoleModule},
+    components: {Detail,RoleUser,RoleOrg,RoleModule,RoleRes},
     data() {
       return {
         name: null,
@@ -159,10 +161,12 @@
         create:false,
         role_user_visible:false,
         role_user_data:{},
-        role_org_data:{},
         role_org_visible:false,
-        role_module_data:{},
+        role_org_data:{},
         role_module_visible:false,
+        role_module_data:{},
+        role_res_visible:false,
+        role_res_data:{},
       }
     },
     methods: {
@@ -254,7 +258,7 @@
           }
         }).catch(()=>{})
       },
-      org(row,type){
+      roleRes(row,type){
         let dataParams = {id:'root',status:1};
         let selectParam = {roleId:row.id,targetType:type}
         if (type === 1){
@@ -278,7 +282,11 @@
             this.role_module_data.value = res.data;
           }).catch(()=>{})
         }else{
-          console.log(type)
+          role_res_list(selectParam).then(res=>{
+            this.role_res_visible = true;
+            this.role_res_data = res.data;
+            this.role_res_data.title = row.name;
+          }).catch(()=>{})
         }
       },
       roles(row){
@@ -310,6 +318,8 @@
         this.role_org_data={};
         this.role_module_visible = false;
         this.role_module_data={};
+        this.role_res_visible = false;
+        this.role_res_data = {};
       },
       submitEdit(form){
         let data = {
