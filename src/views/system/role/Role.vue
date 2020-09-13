@@ -93,12 +93,15 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="190"
+                    width="320"
                     align="center"
                     header-align="center">
                 <template slot-scope="scope">
                     <el-button @click="detail(scope.row)" type="primary" size="small" icon="el-icon-document"></el-button>
                     <el-button @click="edit(scope.row)" type="warning" size="small" icon="el-icon-edit"></el-button>
+                    <el-button @click="org(scope.row,1)" type="warning" size="small" icon="el-icon-office-building"></el-button>
+                    <el-button @click="org(scope.row,2)" type="warning" size="small" icon="el-icon-share"></el-button>
+                    <el-button @click="org(scope.row,3)" type="warning" size="small" icon="el-icon-tickets"></el-button>
                     <el-button @click="roles(scope.row)" type="warning" size="small" icon="el-icon-s-check"></el-button>
                     <el-button @click="del(scope.row)" type="danger" size="small" icon="el-icon-delete" :disabled="scope.row.status === 1"></el-button>
                 </template>
@@ -118,6 +121,7 @@
         <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :create="create"
                 @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
         <UserRole :visible="role_visible" :title="role_title" :data="role_data" @cancel="cancel"></UserRole>
+        <RoleOrg :data="role_org_data" :visible="role_org_visible" @cancel="cancel"></RoleOrg>
     </el-scrollbar>
 </template>
 
@@ -125,12 +129,16 @@
 
   import {list,detail,del,add,edit,updateStatus} from '@/api/role';
   import {list as role_user_list} from '@/api/role_user';
+  import {list as role_res_list} from '@/api/role_res';
+  import {superior as deptTree} from '@/api/dept';
+  import {superior as moduleTree} from '@/api/module';
   import Detail from "@/views/system/role/detail";
   import UserRole from "@/views/system/role/userRole";
+  import RoleOrg from "@/views/system/role/roleOrg";
 
   export default {
     name: "Role",
-    components: {Detail,UserRole},
+    components: {Detail,UserRole,RoleOrg},
     data() {
       return {
         name: null,
@@ -150,6 +158,8 @@
         role_visible:false,
         role_data:{},
         role_title:'',
+        role_org_data:{},
+        role_org_visible:false,
       }
     },
     methods: {
@@ -241,6 +251,27 @@
           }
         }).catch(()=>{})
       },
+      org(row,type){
+        let dataParams = {id:'root',status:1};
+        let selectParam = {roleId:row.id,targetType:type}
+        if (type === 1){
+          deptTree(dataParams).then(res=>{
+            this.role_org_visible = true;
+            this.role_org_data.data = res.data;
+            this.role_org_data.title = row.name;
+            this.role_org_data.roleId = row.id;
+          }).catch(()=>{});
+          role_res_list(selectParam).then(res=>{
+            this.role_org_data.value = res.data;
+          }).catch(()=>{})
+        }else if(type === 2){
+          moduleTree(dataParams).then(res=>{
+            console.log(res)
+          }).catch(()=>{})
+        }else{
+          console.log(type)
+        }
+      },
       roles(row){
         let data = {id:row.id,type:1};
         role_user_list(data).then(res=>{
@@ -265,6 +296,9 @@
       },
       cancel(){
         this.role_visible=false;
+        this.role_data={};
+        this.role_org_visible = false;
+        this.role_org_data={};
       },
       submitEdit(form){
         let data = {
