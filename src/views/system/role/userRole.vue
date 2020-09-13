@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="visible" :title="title" :disabled="true" :show-close="false" :center="true">
+    <el-dialog :visible.sync="visible" :title="title" :disabled="true" :show-close="false" :center="true" :before-close="cancel">
         <el-transfer
             filterable
             filter-placeholder="请输入用户名称"
