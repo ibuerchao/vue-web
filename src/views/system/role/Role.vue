@@ -120,7 +120,7 @@
         </div>
         <Detail :visible="visible" :form="form" :disabled="disabled" :title="title" :create="create"
                 @closeDialog="closeDialog" @submitEdit="submitEdit(form)" @submitAdd="submitAdd(form)"></Detail>
-        <UserRole :visible="role_visible" :title="role_title" :data="role_data" @cancel="cancel"></UserRole>
+        <RoleUser :data="role_user_data" :visible="role_user_visible" @cancel="cancel"></RoleUser>
         <RoleOrg :data="role_org_data" :visible="role_org_visible" @cancel="cancel"></RoleOrg>
         <RoleModule :data="role_module_data" :visible="role_module_visible" @cancel="cancel"></RoleModule>
     </el-scrollbar>
@@ -134,13 +134,13 @@
   import {superior as deptTree} from '@/api/dept';
   import {superior as moduleTree} from '@/api/module';
   import Detail from "@/views/system/role/detail";
-  import UserRole from "@/views/system/role/userRole";
+  import RoleUser from "@/views/system/role/roleUser";
   import RoleOrg from "@/views/system/role/roleOrg";
   import RoleModule from "@/views/system/role/roleModule";
 
   export default {
     name: "Role",
-    components: {Detail,UserRole,RoleOrg,RoleModule},
+    components: {Detail,RoleUser,RoleOrg,RoleModule},
     data() {
       return {
         name: null,
@@ -157,9 +157,8 @@
         disabled:true,
         title:'',
         create:false,
-        role_visible:false,
-        role_data:{},
-        role_title:'',
+        role_user_visible:false,
+        role_user_data:{},
         role_org_data:{},
         role_org_visible:false,
         role_module_data:{},
@@ -286,9 +285,9 @@
         let data = {id:row.id,type:1};
         role_user_list(data).then(res=>{
           if (res.code===200){
-            this.role_visible = true;
-            this.role_data = res.data;
-            this.role_title = row.name;
+            this.role_user_visible = true;
+            this.role_user_data = res.data;
+            this.role_user_data.title = row.name;
           }
         }).catch(()=>{})
       },
@@ -305,8 +304,8 @@
         this.visible=false;
       },
       cancel(){
-        this.role_visible=false;
-        this.role_data={};
+        this.role_user_visible=false;
+        this.role_user_data={};
         this.role_org_visible = false;
         this.role_org_data={};
         this.role_module_visible = false;

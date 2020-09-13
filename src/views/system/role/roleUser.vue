@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="visible" :title="title" :disabled="true" :show-close="false" :center="true" :before-close="cancel">
+    <el-dialog :visible.sync="visible" :title="data.title" :disabled="true" :show-close="false" :center="true" :before-close="cancel">
         <el-transfer
             filterable
             filter-placeholder="请输入用户名称"
@@ -18,11 +18,10 @@
   import {save} from '@/api/role_user';
 
   export default {
-    name: "userRole",
+    name: "roleUser",
     props: {
       visible: {type: Boolean, default: false},
       data: {type: Object, default: ()=>{}},
-      title: {type: String, default: ''}
     },
     methods: {
       cancel(){
